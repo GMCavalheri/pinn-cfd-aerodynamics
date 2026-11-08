@@ -34,7 +34,7 @@ Written by the scripts in `validation/`; never edited by hand.
 | `metrics_json` | All metrics of the final evaluation, including, for training runs, the steps to the extra targets 1e-1, 3e-2, 1e-2, 1e-3 (`steps_to_1e-01` …; -1 if never reached) |
 | `notes` | Why training stopped early, if it did |
 
-## The `-dirty` flags on the Phase 1–3 rows
+## The `-dirty` flags
 
 Up to Phase 3 the flag was set by *any* modified tracked file, and once this CSV was tracked
 the runs modified it themselves, so it marks nearly every row.
@@ -51,4 +51,7 @@ No row was trained with uncommitted model or training code:
   every Phase 3 row ran the same code as `410285c`.
 
 From Phase 4 on, `git_commit` ignores changes under `validation/results/`, so `-dirty` means
-uncommitted code.
+uncommitted code somewhere in the repository. Phase 4's rows are clean. Phase 5's rows
+(`cf0cb28-dirty`) carry an uncommitted edit to `validation/surrogate_benchmark.py` (where its
+`--quick` mode writes), made while the Euler runs trained; the Euler code and its script were
+exactly as committed in `cf0cb28`.

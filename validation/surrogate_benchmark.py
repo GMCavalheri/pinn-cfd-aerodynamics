@@ -15,7 +15,8 @@
 The surrogate is whichever of the Phase 2 network and the Phase 3 champion (seed 0) has the
 lower *validation* velocity error (the test set stays out of model selection). Writes
 ``validation/results/surrogate_benchmark.md``, rows in
-``compute_budget.csv`` and ``docs/figures/surrogate_*.png``.
+``compute_budget.csv`` and ``docs/figures/surrogate_*.png``; ``--quick`` runs tiny sizes and
+writes its table and figures to ``validation/runs/`` instead, recording nothing.
 """
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ from pinncfd.surrogate import (
     timed,
 )
 
-from common import CHECKPOINTS, RESULTS
+from common import CHECKPOINTS, RESULTS, SCRATCH
 
 PHASE = "phase4"
 DEG = np.pi / 180
@@ -210,6 +211,8 @@ def main():
     carpet_pinn, t_carpet_pinn = timed(cl_pressure, model, qc, gpu, device=gpu)
     # ---- record (not for --quick, whose timings are not the benchmark) ---------------------
     record = not args.quick
+    out_dir = RESULTS if record else SCRATCH  # --quick never touches the results or figures
+    fig_dir = plotting.FIGURES if record else SCRATCH
     for n in sizes if record else ():
         budget_row(
             f"panel_x{n}",
@@ -348,7 +351,7 @@ def main():
         f"PINN {t_carpet_pinn:.3g} s ({t_carpet_panel / t_carpet_pinn:.3g}× faster); "
         f"cl difference mean {carpet_err.mean():.3g}, max {carpet_err.max():.3g}.",
     ]
-    (RESULTS / "surrogate_benchmark.md").write_text("\n".join(lines) + "\n")
+    (out_dir / "surrogate_benchmark.md").write_text("\n".join(lines) + "\n")
     for args_ in [
         (
             "inverse_alpha",
@@ -422,7 +425,7 @@ def main():
     ax.set_ylabel("Wall time [s]")
     ax.set_title("Cost of n lift evaluations")
     ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.92), fontsize=8)
-    plotting.save(fig, "surrogate_timing.png")
+    plotting.save(fig, "surrogate_timing.png", fig_dir)
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
     for ax, z, title in (
@@ -436,7 +439,7 @@ def main():
         ax.set_title(f"cl at α = 4°, p = 0.4: {title}")
         ax.set_xlabel("max camber m [% c]")
     axes[0].set_ylabel("thickness t [% c]")
-    plotting.save(fig, "surrogate_carpet.png")
+    plotting.save(fig, "surrogate_carpet.png", fig_dir)
 
     fig, ax = plt.subplots(figsize=(7, 4.5))
     ax.loglog(
@@ -465,7 +468,7 @@ def main():
     ax.set_ylabel("Mean abs cl error vs 400 panels")
     ax.set_title("Accuracy against cost")
     ax.legend(fontsize=8)
-    plotting.save(fig, "surrogate_cost_accuracy.png")
+    plotting.save(fig, "surrogate_cost_accuracy.png", fig_dir)
 
     fig, ax = plt.subplots(figsize=(6, 4.5))
     ax.plot(cl_ref, cl_p, ".", ms=3, color=plotting.SERIES[0], label="surface pressure")
@@ -476,7 +479,7 @@ def main():
     ax.set_ylabel("cl, PINN")
     ax.set_title(f"Lift of {n_acc} random sections")
     ax.legend()
-    plotting.save(fig, "surrogate_accuracy.png")
+    plotting.save(fig, "surrogate_accuracy.png", fig_dir)
 
 
 if __name__ == "__main__":
