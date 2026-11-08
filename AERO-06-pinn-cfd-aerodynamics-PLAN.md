@@ -51,7 +51,7 @@ pinn-cfd-aerodynamics/
 - [x] **Phase 2 — Airfoil flow field PINN**: extend to a parameterized airfoil family, train on a range of shapes/angles of attack, validate against the panel-method solver from Aerodynamics From Scratch.
 - [x] **Phase 3 — Neuroevolutionary architecture search**: apply the thesis's neuroevolution methodology to optimize the PINN's architecture and loss weighting for the airfoil flow field problem.
 - [x] **Phase 4 — Surrogate speed benchmarking**: measure and document PINN inference speed vs. panel-method solver speed across many repeated shape/condition evaluations.
-- [ ] **Phase 5 (exploratory) — Extension toward 2D Euler flow**: attempt a PINN formulation for the steady 2D Euler equations on a simplified case, documenting both successes and the genuine difficulties (shock capturing, training stability) — an honest account of the limits is itself valuable, not a weakness.
+- [x] **Phase 5 (exploratory) — Extension toward 2D Euler flow**: attempt a PINN formulation for the steady 2D Euler equations on a simplified case, documenting both successes and the genuine difficulties (shock capturing, training stability) — an honest account of the limits is itself valuable, not a weakness.
 - [ ] **Phase 6 — Documentation and publishing**: write up methodology, results, and an honest discussion of where PINNs help (smooth, well-posed problems, surrogate speed) and where classical methods still win.
 
 ## Validation Strategy
