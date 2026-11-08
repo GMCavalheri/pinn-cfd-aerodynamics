@@ -1,0 +1,1263 @@
+{
+ "generation": 4,
+ "population": [
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.9613930893092216,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.1479972601084218,
+    "n_params": 4483,
+    "time_s": 55.07924332901894,
+    "cp_rms": 1.0115282572690365,
+    "cl_err_circulation": 0.5339298612815926,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0014113927708106619,
+    "w_body": 5.408336157718351,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 15.434397571179078,
+    "w_far": 3.161684069357875,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.024120226786211767,
+    "n_params": 6851,
+    "time_s": 64.50061903501046,
+    "cp_rms": 0.18560319180115262,
+    "cl_err_circulation": 0.1501077560248178,
+    "steps_to_1e-01": 100.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00032412074615805126,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.03748884487510769,
+    "n_params": 5795,
+    "time_s": 55.169134293013485,
+    "cp_rms": 0.34263511443653727,
+    "cl_err_circulation": 0.10251497096673233,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.8033882684338168,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 35.84740676653836,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.15377267539359302,
+    "n_params": 4483,
+    "time_s": 55.125967581989244,
+    "cp_rms": 0.6835556799463627,
+    "cl_err_circulation": 0.5820493040161159,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.0273934213762874,
+    "n_params": 6851,
+    "time_s": 65.68940122998902,
+    "cp_rms": 0.2881832653492423,
+    "cl_err_circulation": 0.19363065868188734,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 7.495884480663946,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.0457849838578129,
+    "n_params": 5795,
+    "time_s": 55.776438176006195,
+    "cp_rms": 0.39115834665370464,
+    "cl_err_circulation": 0.1266056420660766,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 384,
+    "fourier_scale": 0.8033882684338168,
+    "lr": 0.0005238605045200359,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 35.84740676653836,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.15459409103927538,
+    "n_params": 4483,
+    "time_s": 55.40933363499062,
+    "cp_rms": 0.6719944173572258,
+    "cl_err_circulation": 0.585432709684386,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 96,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0008960781322766192,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.037205733135159014,
+    "n_params": 39395,
+    "time_s": 56.53960784099763,
+    "cp_rms": 0.4458084813897955,
+    "cl_err_circulation": 0.23085215557347827,
+    "steps_to_1e-01": 200.0
+   },
+   "generation": 4
+  }
+ ],
+ "evaluated": [
+  {
+   "genome": {
+    "depth": 5,
+    "width": 64,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 384,
+    "fourier_scale": 1.0,
+    "lr": 0.001,
+    "w_body": 10.0,
+    "w_tangency": 1.0,
+    "w_kutta": 10.0,
+    "w_far": 10.0,
+    "w_data": 10.0
+   },
+   "fitness": {
+    "error": 0.05829352847309792,
+    "n_params": 18499,
+    "time_s": 55.21514579601353,
+    "cp_rms": 0.42401206787038836,
+    "cl_err_circulation": 0.22351223141575782,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 64,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0019516030758660366,
+    "w_body": 54.73520283788638,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 15.434397571179078,
+    "w_far": 4.274398161693902,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.07941194343559305,
+    "n_params": 22659,
+    "time_s": 60.20290342597582,
+    "cp_rms": 0.8045077514455988,
+    "cl_err_circulation": 0.6365889982772571,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 48,
+    "activation": "silu",
+    "fourier_features": 32,
+    "n_interior": 192,
+    "fourier_scale": 1.7504574840282463,
+    "lr": 0.00032412074615805126,
+    "w_body": 15.451346766855226,
+    "w_tangency": 0.33648589334198026,
+    "w_kutta": 38.86303977238022,
+    "w_far": 4.21098467352885,
+    "w_data": 0.7927489429502098
+   },
+   "fitness": {
+    "error": 0.15890491132765538,
+    "n_params": 9155,
+    "time_s": 58.3170218780142,
+    "cp_rms": 0.6105578550979045,
+    "cl_err_circulation": 0.6247584302338101,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 4,
+    "width": 48,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.423592725713853,
+    "lr": 0.001331406786406161,
+    "w_body": 7.017062333532993,
+    "w_tangency": 1.4159002641738991,
+    "w_kutta": 98.09114575979518,
+    "w_far": 87.60038529257075,
+    "w_data": 11.392681428265576
+   },
+   "fitness": {
+    "error": 0.1131928818071789,
+    "n_params": 8771,
+    "time_s": 54.6908765410044,
+    "cp_rms": 0.8198935313185474,
+    "cl_err_circulation": 0.5442270135524849,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 96,
+    "activation": "sin",
+    "fourier_features": 32,
+    "n_interior": 768,
+    "fourier_scale": 0.9306124919634317,
+    "lr": 0.00040946591871008535,
+    "w_body": 14.603771214247205,
+    "w_tangency": 3.7675842042088927,
+    "w_kutta": 0.8525613229431759,
+    "w_far": 2.867517496595079,
+    "w_data": 46.60832579588589
+   },
+   "fitness": {
+    "error": 0.13288670663324442,
+    "n_params": 26243,
+    "time_s": 57.92738631897373,
+    "cp_rms": 2.699239085419548,
+    "cl_err_circulation": 0.36282042557675265,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 96,
+    "activation": "sin",
+    "fourier_features": 16,
+    "n_interior": 768,
+    "fourier_scale": 0.8132714343828987,
+    "lr": 0.001178748857806263,
+    "w_body": 1.0321282770792,
+    "w_tangency": 1.4957430776342595,
+    "w_kutta": 46.86224130787793,
+    "w_far": 0.4802559792604229,
+    "w_data": 7.405620178316892
+   },
+   "fitness": {
+    "error": 0.1588913843640552,
+    "n_params": 23171,
+    "time_s": 58.65716476799571,
+    "cp_rms": 0.6295247165640843,
+    "cl_err_circulation": 0.6274905217272329,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.166302493059394,
+    "n_params": 6595,
+    "time_s": 60.59469933701621,
+    "cp_rms": 0.819676656653894,
+    "cl_err_circulation": 0.6960994064362604,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 96,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00047384281449446014,
+    "w_body": 0.18717986807898487,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 0.7872060052107823,
+    "w_far": 10.374917068196313,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.0537379062056879,
+    "n_params": 48707,
+    "time_s": 83.71734969397949,
+    "cp_rms": 0.42886221242204114,
+    "cl_err_circulation": 0.2640161541094753,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 96,
+    "activation": "silu",
+    "fourier_features": 16,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 15.383152705860645,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 0.7872060052107823,
+    "w_far": 38.987040636640316,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.1606711866172249,
+    "n_params": 41795,
+    "time_s": 76.08460390000255,
+    "cp_rms": 0.5930283950951462,
+    "cl_err_circulation": 0.6375231203335127,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 96,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00047384281449446014,
+    "w_body": 33.415798146329834,
+    "w_tangency": 1.0787726726300038,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 10.374917068196313,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.15434178500654688,
+    "n_params": 51107,
+    "time_s": 61.77335275702353,
+    "cp_rms": 0.6955161609478282,
+    "cl_err_circulation": 0.5829164248406766,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.9613930893092216,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.1479972601084218,
+    "n_params": 4483,
+    "time_s": 55.07924332901894,
+    "cp_rms": 1.0115282572690365,
+    "cl_err_circulation": 0.5339298612815926,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 64,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.7901717122821221,
+    "lr": 0.0019516030758660366,
+    "w_body": 0.18717986807898487,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 15.434397571179078,
+    "w_far": 4.274398161693902,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.06581223162761779,
+    "n_params": 22659,
+    "time_s": 64.01993152400246,
+    "cp_rms": 0.39148663360691416,
+    "cl_err_circulation": 0.26414710091983273,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0014113927708106619,
+    "w_body": 5.408336157718351,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 15.434397571179078,
+    "w_far": 3.161684069357875,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.024120226786211767,
+    "n_params": 6851,
+    "time_s": 64.50061903501046,
+    "cp_rms": 0.18560319180115262,
+    "cl_err_circulation": 0.1501077560248178,
+    "steps_to_1e-01": 100.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 48,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.001331406786406161,
+    "w_body": 7.017062333532993,
+    "w_tangency": 1.4159002641738991,
+    "w_kutta": 5.448481868293255,
+    "w_far": 26.57114414780165,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.07054023122076174,
+    "n_params": 13475,
+    "time_s": 61.49942598902271,
+    "cp_rms": 0.6083874674036964,
+    "cl_err_circulation": 0.2616005422626566,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 96,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00047384281449446014,
+    "w_body": 14.603771214247205,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 0.8525613229431759,
+    "w_far": 2.867517496595079,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.16950589116818762,
+    "n_params": 48707,
+    "time_s": 60.693897422985174,
+    "cp_rms": 4.100367090285546,
+    "cl_err_circulation": 0.7703581935912842,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 4,
+    "width": 48,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.423592725713853,
+    "lr": 0.001331406786406161,
+    "w_body": 7.017062333532993,
+    "w_tangency": 1.4159002641738991,
+    "w_kutta": 98.09114575979518,
+    "w_far": 1.4932801046296207,
+    "w_data": 2.682260102204907
+   },
+   "fitness": {
+    "error": 0.11479581358642564,
+    "n_params": 8771,
+    "time_s": 55.185802503998275,
+    "cp_rms": 0.5962846529196097,
+    "cl_err_circulation": 0.506721305725663,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 1
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00047384281449446014,
+    "w_body": 15.078930266866458,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 38.801632295525714,
+    "w_far": 10.374917068196313,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.09182416973372863,
+    "n_params": 6851,
+    "time_s": 65.59960341201804,
+    "cp_rms": 0.47605690715771365,
+    "cl_err_circulation": 0.41622819271134104,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 48,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.423592725713853,
+    "lr": 0.0019516030758660366,
+    "w_body": 7.017062333532993,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 0.5485521317841864,
+    "w_far": 87.60038529257075,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.14547735245156643,
+    "n_params": 13475,
+    "time_s": 60.04585265298374,
+    "cp_rms": 0.6803122964541239,
+    "cl_err_circulation": 0.6225102150983093,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 64,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.0411553795724398,
+    "lr": 0.001331406786406161,
+    "w_body": 0.18717986807898487,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 5.448481868293255,
+    "w_far": 26.57114414780165,
+    "w_data": 1.1434844078300521
+   },
+   "fitness": {
+    "error": 0.11541839418107055,
+    "n_params": 22659,
+    "time_s": 62.66139252399444,
+    "cp_rms": 0.9890412696974689,
+    "cl_err_circulation": 0.4920857760130038,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 96,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 768,
+    "fourier_scale": 1.0,
+    "lr": 0.00047384281449446014,
+    "w_body": 0.18717986807898487,
+    "w_tangency": 1.0,
+    "w_kutta": 0.1034423182483406,
+    "w_far": 10.0,
+    "w_data": 10.0
+   },
+   "fitness": {
+    "error": 0.12956035501890106,
+    "n_params": 51107,
+    "time_s": 65.27070034200733,
+    "cp_rms": 3.839119663433026,
+    "cl_err_circulation": 0.3115164852010421,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 7.495884480663946,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.0457849838578129,
+    "n_params": 5795,
+    "time_s": 55.776438176006195,
+    "cp_rms": 0.39115834665370464,
+    "cl_err_circulation": 0.1266056420660766,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 4,
+    "width": 64,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.423592725713853,
+    "lr": 0.00047384281449446014,
+    "w_body": 0.18717986807898487,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 0.7872060052107823,
+    "w_far": 42.736473254456136,
+    "w_data": 11.392681428265576
+   },
+   "fitness": {
+    "error": 0.08692501451506926,
+    "n_params": 14339,
+    "time_s": 56.008780899996054,
+    "cp_rms": 0.6549949117299494,
+    "cl_err_circulation": 0.4268816285641263,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0014113927708106619,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 15.434397571179078,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.11517722676495484,
+    "n_params": 7651,
+    "time_s": 69.48320326699468,
+    "cp_rms": 1.3157784063268854,
+    "cl_err_circulation": 0.35666044521590623,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00032412074615805126,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.15089750510115107,
+    "n_params": 6595,
+    "time_s": 59.35383029299555,
+    "cp_rms": 0.937287088019625,
+    "cl_err_circulation": 0.5652442663902689,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 2
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00047470648405899827,
+    "w_body": 5.408336157718351,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 21.869271334973106,
+    "w_far": 0.28238290434184987,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.044435097130342036,
+    "n_params": 6851,
+    "time_s": 57.39396003301954,
+    "cp_rms": 0.27196845790336566,
+    "cl_err_circulation": 0.1244328653890101,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0004235813211600892,
+    "w_body": 0.16955752270778546,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 26.393913574036503,
+    "w_far": 1.329905907580462,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.09868147779968726,
+    "n_params": 5795,
+    "time_s": 56.38209952501347,
+    "cp_rms": 0.5370320402785543,
+    "cl_err_circulation": 0.3040475215095708,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 48,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 7.495884480663946,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.0711201458224539,
+    "n_params": 13475,
+    "time_s": 57.439256587967975,
+    "cp_rms": 0.40803935834597815,
+    "cl_err_circulation": 0.21492657060120984,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.5605747278548514,
+    "lr": 0.0005205838581359943,
+    "w_body": 29.384536217762122,
+    "w_tangency": 9.796055071703163,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 11.692441636787377,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.06452048400581603,
+    "n_params": 5795,
+    "time_s": 56.77451319400279,
+    "cp_rms": 0.44521502956048803,
+    "cl_err_circulation": 0.23331328551498529,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 192,
+    "fourier_scale": 0.8033882684338168,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 35.84740676653836,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.15377267539359302,
+    "n_params": 4483,
+    "time_s": 55.125967581989244,
+    "cp_rms": 0.6835556799463627,
+    "cl_err_circulation": 0.5820493040161159,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00032412074615805126,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.03748884487510769,
+    "n_params": 5795,
+    "time_s": 55.169134293013485,
+    "cp_rms": 0.34263511443653727,
+    "cl_err_circulation": 0.10251497096673233,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 96,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 0.9613930893092216,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 61.45179048343958,
+    "w_kutta": 4.839050030079708,
+    "w_far": 1.2449114841648308,
+    "w_data": 0.39677685607984353
+   },
+   "fitness": {
+    "error": 0.1415343722873285,
+    "n_params": 20771,
+    "time_s": 54.53905909000605,
+    "cp_rms": 0.6232880621412644,
+    "cl_err_circulation": 0.4150789873507946,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.0273934213762874,
+    "n_params": 6851,
+    "time_s": 65.68940122998902,
+    "cp_rms": 0.2881832653492423,
+    "cl_err_circulation": 0.19363065868188734,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 3
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "silu",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0014113927708106619,
+    "w_body": 29.384536217762122,
+    "w_tangency": 6.605524798050313,
+    "w_kutta": 94.41786047125603,
+    "w_far": 1.2449114841648308,
+    "w_data": 63.858288023829495
+   },
+   "fitness": {
+    "error": 0.03863047952104008,
+    "n_params": 6851,
+    "time_s": 65.50553065502027,
+    "cp_rms": 0.2740765498172162,
+    "cl_err_circulation": 0.6006770813796096,
+    "steps_to_1e-01": 200.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 4,
+    "width": 48,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.043648122968318145,
+    "n_params": 8771,
+    "time_s": 53.82283653799095,
+    "cp_rms": 0.4203039110540414,
+    "cl_err_circulation": 0.20134874372240041,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 384,
+    "fourier_scale": 0.9579657196876743,
+    "lr": 0.0007048794778894357,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 1.2449114841648308,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.1516356269347468,
+    "n_params": 7651,
+    "time_s": 62.73219484198489,
+    "cp_rms": 0.7343882126411567,
+    "cl_err_circulation": 0.5533496252175083,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 4,
+    "width": 32,
+    "activation": "sin",
+    "fourier_features": 16,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.00032412074615805126,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 26.826186602655167,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.16234579945314997,
+    "n_params": 5539,
+    "time_s": 60.700120195993804,
+    "cp_rms": 0.5958366540954827,
+    "cl_err_circulation": 0.65462179603407,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 64,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 768,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0005205838581359943,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 9.435376507964966,
+    "w_data": 2.2439754432582886
+   },
+   "fitness": {
+    "error": 0.05259127646452785,
+    "n_params": 18499,
+    "time_s": 56.61523901198234,
+    "cp_rms": 0.4345377710828914,
+    "cl_err_circulation": 0.21624286088729816,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 96,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 384,
+    "fourier_scale": 1.6274220381051958,
+    "lr": 0.0008960781322766192,
+    "w_body": 42.60422723978783,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 0.28238290434184987,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.037205733135159014,
+    "n_params": 39395,
+    "time_s": 56.53960784099763,
+    "cp_rms": 0.4458084813897955,
+    "cl_err_circulation": 0.23085215557347827,
+    "steps_to_1e-01": 200.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 3,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 384,
+    "fourier_scale": 0.8033882684338168,
+    "lr": 0.0005238605045200359,
+    "w_body": 29.384536217762122,
+    "w_tangency": 0.1498663411089493,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 35.84740676653836,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.15459409103927538,
+    "n_params": 4483,
+    "time_s": 55.40933363499062,
+    "cp_rms": 0.6719944173572258,
+    "cl_err_circulation": 0.585432709684386,
+    "steps_to_1e-01": -1.0
+   },
+   "generation": 4
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 32,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 192,
+    "fourier_scale": 1.4424053082095616,
+    "lr": 0.00032412074615805126,
+    "w_body": 29.384536217762122,
+    "w_tangency": 5.508040919108848,
+    "w_kutta": 1.0194153802344124,
+    "w_far": 78.097054640624,
+    "w_data": 9.074939303745667
+   },
+   "fitness": {
+    "error": 0.04715753083098634,
+    "n_params": 5795,
+    "time_s": 54.198596153990366,
+    "cp_rms": 0.3179819002413883,
+    "cl_err_circulation": 0.1667708127636933,
+    "steps_to_1e-01": 500.0
+   },
+   "generation": 4
+  }
+ ],
+ "history": [
+  {
+   "generation": 0,
+   "best_error": 0.0537379062056879,
+   "median_error": 0.12303979422021166,
+   "min_params": 6595,
+   "max_params": 48707,
+   "front_size": 4,
+   "evaluations": 8
+  },
+  {
+   "generation": 1,
+   "best_error": 0.024120226786211767,
+   "median_error": 0.06817623142418977,
+   "min_params": 4483,
+   "max_params": 48707,
+   "front_size": 2,
+   "evaluations": 16
+  },
+  {
+   "generation": 2,
+   "best_error": 0.024120226786211767,
+   "median_error": 0.06441687984692983,
+   "min_params": 4483,
+   "max_params": 48707,
+   "front_size": 3,
+   "evaluations": 24
+  },
+  {
+   "generation": 3,
+   "best_error": 0.024120226786211767,
+   "median_error": 0.045110040494077464,
+   "min_params": 4483,
+   "max_params": 6851,
+   "front_size": 3,
+   "evaluations": 32
+  },
+  {
+   "generation": 4,
+   "best_error": 0.024120226786211767,
+   "median_error": 0.04163691436646029,
+   "min_params": 4483,
+   "max_params": 39395,
+   "front_size": 3,
+   "evaluations": 40
+  }
+ ],
+ "rng": {
+  "bit_generator": "PCG64",
+  "state": {
+   "state": 13732480679411150047505071448456678179,
+   "inc": 87136372517582989555478159403783844777
+  },
+  "has_uint32": 1,
+  "uinteger": 3306223847
+ }
+}
