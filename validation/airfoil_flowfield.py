@@ -145,7 +145,8 @@ def write_table(rows, test_scores, extrap_scores, panel_info, cred):
         "Velocity error: relative L2 norm of (u, v) at 512 field points per case (no closer "
         "than 0.02 c to the surface), averaged over cases. Validation: 8 cases (used during "
         "training to monitor convergence). Test: 6 sections × 4 angles, never used before the "
-        "final evaluation. Plateau window 1000 steps, tolerance 1 %.",
+        "final evaluation. Plateau window 1000 steps, tolerance 1 %; a plateau at the last step "
+        "(5000) means the run was still improving when the budget ran out.",
         "",
         "## Training runs (validation set)",
         "",
@@ -228,7 +229,7 @@ def write_table(rows, test_scores, extrap_scores, panel_info, cred):
         "## The reference and the baseline",
         "",
         f"Panel method with {PANEL_N} panels (the baseline): {1e3 * panel_info:.3g} ms per case "
-        "(assemble + solve, median, NumPy on one CPU core).",
+        "(contour + assemble + solve, median, NumPy with its default BLAS threads).",
         "",
         "| Panels | Velocity difference to N = 800 | cl difference to N = 800 |",
         "|---|---|---|",
@@ -279,7 +280,7 @@ def figures(histories, device):
             lw=1.0,
         )
         cl_ref, cl_pinn = s["cl_ref"][i], s["cl_circulation"][i]
-        ax.set_title(f"{c.name}: cl {cl_ref:.3f} panel / {cl_pinn:.3f} PINN", fontsize=10)
+        ax.set_title(f"{c.name}\ncl {cl_ref:.3f} panel, {cl_pinn:.3f} PINN", fontsize=10)
         ax.set_xlabel("x / c")
     axes[0].legend()
     plotting.save(fig, "airfoil_cp_test.png")
@@ -310,9 +311,8 @@ def figures(histories, device):
     fig, ax = plt.subplots(figsize=(7, 4))
     alphas = np.linspace(-4, 8, 25) * DEG
     for i, code in enumerate(("0012", "2412", "4415")):
-        q = np.array(
-            [[int(code[0]) / 100, int(code[1]) / 10, int(code[2:]) / 100, a] for a in alphas]
-        )
+        # family._naca gives a symmetric section the box-centre p, as in the test set
+        q = np.array([family._naca(code, a / DEG).params for a in alphas])
         cl_pinn = lift_from_circulation(model, q, device)
         ax.plot(alphas / DEG, cl_pinn, color=plotting.SERIES[i], label=f"NACA {code} PINN")
         cl = [panel_solution(*q[k, :3], q[k, 3], 200).cl for k in range(0, len(q), 3)]
