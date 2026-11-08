@@ -169,7 +169,13 @@ def figures(histories, device):
     panels = [("exact", None)] + [
         (c, c) for c in ("wedge_plain", "wedge_viscous", "wedge_weighted")
     ]
-    fig, axes = plt.subplots(1, 4, figsize=(15, 3.8), sharey=True)
+    short = {
+        "exact": "exact",
+        "wedge_plain": "plain PINN",
+        "wedge_viscous": "artificial viscosity ν = 0.01",
+        "wedge_weighted": "down-weighted at the shock",
+    }
+    fig, axes = plt.subplots(1, 4, figsize=(16, 3.9), sharey=True)
     for ax, (title, case) in zip(axes, panels, strict=True):
         if case is None:
             rho = wedge_field(*pts.T, np.radians(10), 2.0)[:, 0]
@@ -185,7 +191,7 @@ def figures(histories, device):
         ax.plot(
             [0, 1 / np.tan(np.radians(39.31))], [0, 1], color=plotting.SERIES[1], lw=0.8, ls="--"
         )
-        ax.set_title(LABELS.get(title, "exact"), fontsize=9)
+        ax.set_title(short[title], fontsize=10)
         ax.set_aspect("equal")
         ax.grid(False)
         ax.set_xlabel("x")
@@ -198,7 +204,7 @@ def figures(histories, device):
     k = np.linspace(0.7, 1.2, 60)
     qn = np.linspace(0, 1, 120)
     K, QN = np.meshgrid(k, qn)
-    Q = 0.5 + (K - 0.5) * QN * 0.9999
+    Q = 0.5 + (K - 0.5) * QN * (1 - 1e-9)  # up to q = k, where the branches meet at y = 0
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True)
     for b in (1, -1):
         x, y, rho, u, v, p = ringleb(Q, K, b)
