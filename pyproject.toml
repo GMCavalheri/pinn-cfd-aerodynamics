@@ -79,4 +79,4 @@ ignore = [
 
 [tool.ruff.lint.isort]
 # validation/ scripts import their sibling helper module directly
-known-local-folder = ["common"]
+known-local-folder = ["common", "airfoil_flowfield"]
