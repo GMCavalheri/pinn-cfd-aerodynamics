@@ -47,7 +47,7 @@ pinn-cfd-aerodynamics/
 ```
 
 ## Execution Plan
-- [ ] **Phase 1 — PINN for 2D Laplace equation**: implement a basic PINN solving potential flow around a cylinder, validate against the closed-form analytical solution.
+- [x] **Phase 1 — PINN for 2D Laplace equation**: implement a basic PINN solving potential flow around a cylinder, validate against the closed-form analytical solution.
 - [ ] **Phase 2 — Airfoil flow field PINN**: extend to a parameterized airfoil family, train on a range of shapes/angles of attack, validate against the panel-method solver from Aerodynamics From Scratch.
 - [ ] **Phase 3 — Neuroevolutionary architecture search**: apply the thesis's neuroevolution methodology to optimize the PINN's architecture and loss weighting for the airfoil flow field problem.
 - [ ] **Phase 4 — Surrogate speed benchmarking**: measure and document PINN inference speed vs. panel-method solver speed across many repeated shape/condition evaluations.
