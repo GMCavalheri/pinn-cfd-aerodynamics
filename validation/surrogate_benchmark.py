@@ -421,7 +421,7 @@ def main():
     ax.set_xlabel("Lift evaluations n")
     ax.set_ylabel("Wall time [s]")
     ax.set_title("Cost of n lift evaluations")
-    ax.legend()
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.92), fontsize=8)
     plotting.save(fig, "surrogate_timing.png")
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
