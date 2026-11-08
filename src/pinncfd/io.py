@@ -60,8 +60,17 @@ def git_commit() -> str:
         sha = subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True
         ).stdout.strip()
+        # results written by the runs themselves (this CSV included) do not make the code dirty
         dirty = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=no"],
+            [
+                "git",
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+                "--",
+                ".",
+                ":(exclude)validation/results",
+            ],
             cwd=ROOT,
             capture_output=True,
             text=True,
