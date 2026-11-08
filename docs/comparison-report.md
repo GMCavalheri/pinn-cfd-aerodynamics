@@ -100,7 +100,7 @@ Every failure is reported in its lesson with evidence. In short:
   the seed spread, not exactly.
 - Each budget row records its git commit. The `-dirty` flags on Phases 1–3 and 5 are explained
   in the results README; none marks uncommitted model code.
-- 86 tests, each against a closed-form result or a cited value, run in about 35 s on the CPU.
+- 89 tests, each against a closed-form result or a cited value, run in about 35 s on the CPU.
 
 When to reach for a PINN at all is the subject of
 [Lesson 6](lessons/06-verification-validation-and-when-to-use-a-pinn.md).

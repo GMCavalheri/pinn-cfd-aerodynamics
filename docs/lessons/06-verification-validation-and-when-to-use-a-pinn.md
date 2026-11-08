@@ -43,7 +43,7 @@ matches the air.
 
 ## 2. The test hierarchy
 
-86 tests, all on the CPU in about 35 s, each asserting against a closed-form result or a cited
+89 tests, all on the CPU in about 35 s, each asserting against a closed-form result or a cited
 value:
 
 | Level | Examples | File (tests) |
@@ -53,7 +53,7 @@ value:
 | Components against references | the Joukowski slit lies inside every section and its log radius is harmonic, tending to $\ln r$; the pressure-lift integral reproduces AERO-01's own to 1e-6; Newton agrees with Brent's method | `test_airfoil_flowfield.py` (21), `test_surrogate.py` (5) |
 | Algorithms against hand-checkable cases | non-dominated sorting and crowding distance on fronts from Deb et al. (2002); genomes stay in their domains | `test_neuroevolution.py` (9) |
 | Short seeded training | a small cylinder PINN trained for seconds on the CPU reaches a stated bound, with the reason for the bound written next to it | `test_laplace_cylinder.py`, `test_airfoil_flowfield.py` |
-| Documentation | GitHub math renders: no constructs that Markdown mangles inside inline math | `test_docs.py` (14) |
+| Documentation | GitHub math renders: no constructs that Markdown mangles inside inline math | `test_docs.py` (16, one per Markdown file) |
 
 The training tests are the delicate ones. Their bounds state what a short run is expected to
 reach, not what the last run happened to reach, and they never get loosened to make a failing
