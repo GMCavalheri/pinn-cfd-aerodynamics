@@ -4,7 +4,9 @@
    panel method (200 panels, the baseline) and from the PINN (surface pressure and circulation).
 2. Speed: wall time for n = 1 ... 10^4 lift evaluations — the panel method one case at a time,
    the PINN in one batch on the GPU and on the CPU — and the break-even number of evaluations
-   once the PINN's training time is charged to it.
+   once the PINN's training time is charged to it, both against the 200-panel baseline and
+   against the coarsest panel method that is at least as accurate as the PINN (a panel-count
+   sweep on the same 500 sections).
 3. Design loop: (a) the incidence giving cl = 0.8 for each test section: Brent's method on
    panel solutions vs batched Newton on the PINN (d cl / d alpha by autograd through the
    network's alpha input) and vs a batched PINN sweep of the whole cl-alpha curve; (b) a cl
@@ -47,6 +49,7 @@ DEG = np.pi / 180
 PANELS = 200
 N_ACCURACY = 500
 SIZES = (1, 10, 100, 1000, 10000)
+PANEL_SWEEP = (8, 12, 16, 24, 32, 48, 64, 100, 200)
 TARGET_CL = 0.8
 
 
@@ -122,6 +125,17 @@ def main():
         "pinn_circulation": np.abs(cl_c - cl_ref),
     }
 
+    # accuracy and cost of the panel method against its panel count (the equal-accuracy baseline)
+    sweep_err, sweep_cost = {}, {}
+    q_cost = family.uniform(50 if args.quick else 1000, np.random.default_rng(6))
+    for n_pan in PANEL_SWEEP:
+        sweep_err[n_pan] = np.abs(panel_cl(params, n_pan) - cl_ref)
+        _, t = timed(panel_cl, q_cost, n_pan, repeats=1)
+        sweep_cost[n_pan] = t / len(q_cost)
+    n_equal = next(
+        (n for n in PANEL_SWEEP if sweep_err[n].mean() <= acc["pinn_pressure"].mean()), PANELS
+    )
+
     # ---- 2. speed -------------------------------------------------------------------------
     keys = ("panel", "pinn_gpu_pressure", "pinn_gpu_circulation", "pinn_cpu", "contours")
     timing = {k: {} for k in keys}
@@ -150,6 +164,9 @@ def main():
     n_star_gpu = break_even(train_s, per_panel, per_gpu)
     n_star_cpu = break_even(train_s, per_panel, per_cpu)
     n_star_search = break_even(train_s + search_s, per_panel, per_gpu)
+    per_circ = timing["pinn_gpu_circulation"][big] / big
+    n_star_eq = break_even(train_s, sweep_cost[n_equal], per_gpu)
+    n_star_eq_circ = break_even(train_s, sweep_cost[n_equal], per_circ)
 
     # ---- 3a. inverse problem: alpha for cl = 0.8 ------------------------------------------
     sections = family.TEST_SECTIONS
@@ -280,6 +297,30 @@ def main():
             else "."
         ),
         "",
+        "## The equal-accuracy baseline",
+        "",
+        f"The PINN's lift is less accurate than the {PANELS}-panel baseline, so the fair "
+        "comparison is with the coarsest panel method that is at least as accurate. Panel "
+        f"count sweep on the same {n_acc} sections (error against 400 panels; time per case "
+        f"over {len(q_cost)} other sections, one at a time):",
+        "",
+        "| Panels | Mean abs cl error | 95th percentile | Time per case |",
+        "|---|---|---|---|",
+        *[
+            f"| {n_pan} | {sweep_err[n_pan].mean():.3g} | "
+            f"{np.percentile(sweep_err[n_pan], 95):.3g} | {1e3 * sweep_cost[n_pan]:.3g} ms |"
+            for n_pan in PANEL_SWEEP
+        ],
+        "",
+        f"The coarsest panel method at least as accurate as the PINN's pressure lift (mean "
+        f"{acc['pinn_pressure'].mean():.3g}) has **{n_equal} panels**: "
+        f"{1e3 * sweep_cost[n_equal]:.3g} ms per case, against the PINN's "
+        f"{1e6 * per_gpu:.3g} µs (pressure, GPU, contours included) and {1e6 * per_circ:.3g} µs "
+        f"(circulation, GPU) at n = {big}: {sweep_cost[n_equal] / per_gpu:.3g}× and "
+        f"{sweep_cost[n_equal] / per_circ:.3g}× faster per case. **Break-even against it**: "
+        f"{n_star_eq:,.0f} evaluations (pressure) or {n_star_eq_circ:,.0f} (circulation), "
+        "training time charged, search not.",
+        "",
         f"## Design loop (a): the incidence for cl = {TARGET_CL}",
         "",
         "Panel: Brent's method on [−10°, 15°], tolerance 1e-6 rad, one section at a time "
@@ -337,18 +378,39 @@ def main():
     ]:
         if record:
             budget_row(*args_)
+    for n_pan in PANEL_SWEEP if record else ():
+        budget_row(
+            f"panel_N{n_pan}",
+            float(sweep_err[n_pan].mean()),
+            sweep_cost[n_pan],
+            n_pan,
+            "cpu",
+            f"panel-count sweep: one lift evaluation (time per case over {len(q_cost)} cases)",
+            {
+                "cl_err_p95": float(np.percentile(sweep_err[n_pan], 95)),
+                "equal_accuracy": n_pan == n_equal,
+            },
+        )
 
     # ---- figures ---------------------------------------------------------------------------
     plotting.use_style()
     fig, ax = plt.subplots(figsize=(7, 4.5))
     ns = np.array(sizes)
     series = [
-        ("panel", "panel method (CPU)", plotting.REFERENCE, "--"),
+        ("panel", f"panel method, {PANELS} panels (CPU)", plotting.REFERENCE, "--"),
         ("pinn_gpu_pressure", "PINN, GPU", plotting.SERIES[0], "-"),
         ("pinn_cpu", "PINN, CPU", plotting.SERIES[1], "-"),
     ]
     for key, lab, col, ls in series:
         ax.loglog(ns, [timing[key][n] for n in sizes], ls, color=col, marker="o", label=lab)
+    ax.loglog(
+        ns,
+        ns * sweep_cost[n_equal],
+        "--",
+        color=plotting.TEXT_MUTED,
+        marker="o",
+        label=f"panel method, {n_equal} panels (as accurate as the PINN)",
+    )
     ax.loglog(
         ns,
         [train_s + timing["pinn_gpu_pressure"][n] for n in sizes],
@@ -375,6 +437,35 @@ def main():
         ax.set_xlabel("max camber m [% c]")
     axes[0].set_ylabel("thickness t [% c]")
     plotting.save(fig, "surrogate_carpet.png")
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    ax.loglog(
+        [sweep_cost[n] for n in PANEL_SWEEP],
+        [sweep_err[n].mean() for n in PANEL_SWEEP],
+        "--",
+        color=plotting.REFERENCE,
+        marker="o",
+        label="panel method (CPU), 8–200 panels",
+    )
+    for n_pan in (8, 16, 64, 200):
+        ax.annotate(
+            f"{n_pan}",
+            (sweep_cost[n_pan], sweep_err[n_pan].mean()),
+            textcoords="offset points",
+            xytext=(4, 4),
+            fontsize=8,
+        )
+    for key, per, lab, col in (
+        ("pinn_pressure", per_gpu, "PINN, pressure, GPU", plotting.SERIES[0]),
+        ("pinn_pressure", per_cpu, "PINN, pressure, CPU", plotting.SERIES[1]),
+        ("pinn_circulation", per_circ, "PINN, circulation, GPU", plotting.SERIES[2]),
+    ):
+        ax.loglog(per, acc[key].mean(), "s", color=col, ms=8, label=lab)
+    ax.set_xlabel(f"Time per lift evaluation [s] (PINN: batches of {big})")
+    ax.set_ylabel("Mean abs cl error vs 400 panels")
+    ax.set_title("Accuracy against cost")
+    ax.legend(fontsize=8)
+    plotting.save(fig, "surrogate_cost_accuracy.png")
 
     fig, ax = plt.subplots(figsize=(6, 4.5))
     ax.plot(cl_ref, cl_p, ".", ms=3, color=plotting.SERIES[0], label="surface pressure")
