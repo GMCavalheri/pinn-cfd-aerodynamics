@@ -6,10 +6,10 @@ Loss terms (each a mean square):
   harmonic away from its vortex, which lies inside the body);
 * ``body``  — psi - psi_b on the surface: the body is a streamline;
 * ``tangency`` — normal velocity on the surface. The body condition
-  psi = psi_b alone charges a leak through the surface by the *integrated* flux, which is
-  tiny across the thin trailing edge: a first version without this term let the freestream
-  pass through the tail instead of developing circulation. Penalising the normal velocity
-  charges the local leak speed, which is large exactly there;
+  psi = psi_b alone charges a leak through the surface by the flux Q it carries: a first
+  version without this term let the freestream pass through the thin tail instead of
+  developing circulation. Penalising the normal velocity charges the leak speed Q / l, l the
+  length of surface crossed, which is large for a leak through a short stretch of tail;
 * ``kutta`` — difference of the *downstream* tangential velocities on the upper and lower
   surfaces at matching stations just ahead of the trailing edge: the flow leaves the trailing
   edge smoothly, the condition AERO-01's panel method imposes on its trailing-edge panels.
