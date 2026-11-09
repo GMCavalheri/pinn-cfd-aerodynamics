@@ -63,12 +63,13 @@ class JoukowskiPINN(nn.Module):
         alpha: float,
         features: str = "plain",
         mlp: dict | None = None,
-        section: JoukowskiSection | None = None,
+        mx: float = 0.1,
+        my: float = 0.1,
     ):
         super().__init__()
         if features not in FEATURES:
             raise ValueError(f"features must be one of {FEATURES}")
-        self.section = section or JoukowskiSection()
+        self.section = JoukowskiSection(mx, my)
         self.alpha, self.features = float(alpha), features
         self.cx, self.cy = self.section.center()
         if features == "exact_map":  # rho in [0, ~2.5], cos, sin

@@ -165,10 +165,17 @@ PHASE2_GENOME = {
 # sees (x, y): affine-scaled ("plain") or radially compressed ("compress"). The exact inverse
 # Joukowski map is deliberately not an option: on a Joukowski section it is the solution's own
 # coordinate system, so it would hand the network the answer.
+# The interior-point counts of the family are per shape, with 32 shapes in every batch; a single
+# section gets its own counts, with the hand-tuned value 2048 in the middle.
 FEATURES = ["plain", "compress"]
-JOUKOWSKI_SPACE = PHASE3_SPACE.without("w_data").with_choice("features", FEATURES)
+JOUKOWSKI_SPACE = (
+    PHASE3_SPACE.without("w_data")
+    .with_choice("n_interior", [1024, 2048, 4096])
+    .with_choice("features", FEATURES)
+)
 JOUKOWSKI_HAND_GENOME = {
     **{k: v for k, v in PHASE2_GENOME.items() if k != "w_data"},
+    "n_interior": 2048,
     "features": "plain",
 }
 
