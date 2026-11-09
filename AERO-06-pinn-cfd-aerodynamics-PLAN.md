@@ -54,6 +54,17 @@ pinn-cfd-aerodynamics/
 - [x] **Phase 5 (exploratory) — Extension toward 2D Euler flow**: attempt a PINN formulation for the steady 2D Euler equations on a simplified case, documenting both successes and the genuine difficulties (shock capturing, training stability) — an honest account of the limits is itself valuable, not a weakness.
 - [x] **Phase 6 — Documentation and publishing**: write up methodology, results, and an honest discussion of where PINNs help (smooth, well-posed problems, surrogate speed) and where classical methods still win.
 
+## RES-01 extensions (paper in preparation)
+- [x] Training hooks: `on_eval` callback and a time limit
+- [x] Gene spaces with frozen genes (ablation arms); Phase 3 search replays unchanged
+- [x] Exact Joukowski flow and the case-2 PINN with a feature gene
+- [x] Per-case entry point and compute ledger (`benchmark.py`)
+- [x] Inverse air-data problem with a least-squares oracle
+- [x] Tuning baselines: random, TPE, ASHA, budgeted NSGA-II
+- [x] One-seed pilots (`experiments/res01/`)
+- [ ] Fix the learned circulation (Γ stays near zero; lift about 20 % low)
+- [ ] Pre-registration, then the final runs
+
 ## Validation Strategy
 - Phase 1 validated against closed-form potential flow solution (exact benchmark available).
 - Phase 2 validated against the Aerodynamics From Scratch panel-method solver across a held-out set of airfoil shapes/angles of attack not used in training.

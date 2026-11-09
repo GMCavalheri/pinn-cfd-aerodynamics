@@ -21,12 +21,16 @@ Plan: `AERO-06-pinn-cfd-aerodynamics-PLAN.md` (tick the phase checkboxes as phas
   points), `training.py` (Adam → L-BFGS loop with convergence tracking), `io.py` (checkpoints
   and the compute-budget record), `device.py`, `seed.py`, `plotting.py`. Subpackages mirror the
   plan: `pinn_laplace_2d`, `pinn_airfoil_flowfield`, `pinn_euler_2d` (exploratory),
-  `neuroevolution_search`.
+  `neuroevolution_search`. RES-01 additions: `pinn_joukowski` (case 2, exact flow),
+  `inverse_airdata`, `hpo` (Optuna and budgeted NSGA-II), `benchmark.py` (one entry point per
+  case, `ComputeLedger`).
 - `src/pinncfd/external/` — the **only** place `aero` (AERO-01, uv git dependency pinned in
   `pyproject.toml`) is imported. Bump its `rev` deliberately and rerun everything.
 - `tests/` — pytest, one file per module. `validation/` — one script per phase,
   `reference_data/` (cited), `results/` (tables, small checkpoints, compute-budget CSV).
-  `validation/runs/` is scratch (git-ignored).
+  `validation/runs/` is scratch (git-ignored). `experiments/res01/` — RES-01 pilot scripts
+  (phase `res01-pilot`); they record to `experiments/res01/results/compute_budget.csv`, never
+  to `validation/results/`. Phases 1–5 must stay reproducible: RES-01 changes are additive.
 - `docs/` — theory note per module, reports, figures; `docs/lessons/` is the course (keep its
   numbers in sync with `validation/results/`). `notebooks/` — one executed demo per lesson.
 
