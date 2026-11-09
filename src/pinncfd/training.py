@@ -21,6 +21,7 @@ from __future__ import annotations
 import copy
 import math
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -56,6 +57,10 @@ class TrainConfig:
     plateau_window: int = 500
     plateau_tol: float = 0.01
     seed: int = 0
+    # stop once the training time reaches this many seconds (checked at every evaluation, so
+    # it can overrun by up to one ``eval_every`` chunk); None = no limit. For equal-time
+    # budgets across methods.
+    time_limit_s: float | None = None
 
 
 @dataclass
@@ -66,7 +71,7 @@ class TrainResult:
     time_eval_s: float = 0.0
     adam_steps: int = 0
     lbfgs_iters: int = 0
-    stopped: str = ""  # why L-BFGS stopped early, if it did
+    stopped: str = ""  # why training stopped early, if it did
 
     @property
     def time_total_s(self) -> float:
@@ -120,10 +125,31 @@ def _sync(device) -> None:
         torch.cuda.synchronize()
 
 
+def _over_time(res: TrainResult, config: TrainConfig) -> bool:
+    return config.time_limit_s is not None and res.time_total_s >= config.time_limit_s
+
+
+def _halt_reason(by_callback: bool, config: TrainConfig, where: str) -> str:
+    if by_callback:
+        return f"stopped by on_eval at {where}"
+    return f"time limit {config.time_limit_s:g} s reached at {where}"
+
+
 def train(
-    model: torch.nn.Module, problem: Problem, config: TrainConfig, device=None
+    model: torch.nn.Module,
+    problem: Problem,
+    config: TrainConfig,
+    device=None,
+    on_eval: Callable[[int, dict], bool] | None = None,
 ) -> TrainResult:
-    """Train ``model`` on ``problem``; returns the evaluated history and the timings."""
+    """Train ``model`` on ``problem``; returns the evaluated history and the timings.
+
+    ``on_eval(step, row)`` is called after every evaluation after the first (``row`` is the
+    history entry just logged); returning True stops training there, e.g. a pruned trial in a
+    multi-fidelity search. With ``config.time_limit_s`` training also stops at the first
+    evaluation at which the training time has reached the limit. Either way ``stopped`` says
+    why, and an early stop in the Adam stage skips L-BFGS.
+    """
     device = device or next(model.parameters()).device
     rng = np.random.default_rng(config.seed)
     res = TrainResult()
@@ -134,7 +160,7 @@ def train(
         loss = sum(problem.weights[k] * v for k, v in terms.items())
         return loss, terms
 
-    def log(step: int, loss: float, terms: dict) -> None:
+    def log(step: int, loss: float, terms: dict) -> bool:
         _sync(device)
         t0 = time.perf_counter()
         metrics = problem.evaluate(model)
@@ -146,6 +172,7 @@ def train(
         row.update(metrics)
         row["time_s"] = res.time_adam_s + res.time_lbfgs_s
         res.history.append(row)
+        return bool(step and on_eval is not None and on_eval(step, row))
 
     # ---- Adam -------------------------------------------------------------------------------
     opt = torch.optim.Adam(params, lr=config.lr)
@@ -156,6 +183,7 @@ def train(
     log(0, loss.item(), terms)
     _sync(device)
     t0 = time.perf_counter()
+    halted = False
     for step in range(1, config.adam_steps + 1):
         if config.resample_every and step % config.resample_every == 0:
             problem.resample(rng)
@@ -167,13 +195,19 @@ def train(
         if step % config.eval_every == 0 or step == config.adam_steps:
             _sync(device)
             res.time_adam_s += time.perf_counter() - t0
-            log(step, loss.item(), terms)
+            by_callback = log(step, loss.item(), terms)
+            if by_callback or _over_time(res, config):
+                res.adam_steps = step
+                res.stopped = _halt_reason(by_callback, config, f"Adam step {step}")
+                halted = True
+                break
             t0 = time.perf_counter()
-    _sync(device)
-    res.time_adam_s += time.perf_counter() - t0
+    if not halted:
+        _sync(device)
+        res.time_adam_s += time.perf_counter() - t0
 
     # ---- L-BFGS -----------------------------------------------------------------------------
-    if config.lbfgs_iters > 0:
+    if config.lbfgs_iters > 0 and not halted:
         opt = torch.optim.LBFGS(
             params,
             lr=1.0,
@@ -213,8 +247,11 @@ def train(
                 res.stopped = f"non-finite loss after {done} L-BFGS iterations; rolled back"
                 break
             res.lbfgs_iters = done
-            log(config.adam_steps + done, loss, last["terms"])
+            by_callback = log(res.adam_steps + done, loss, last["terms"])
             good_state = copy.deepcopy(model.state_dict())
+            if by_callback or _over_time(res, config):
+                res.stopped = _halt_reason(by_callback, config, f"L-BFGS iteration {done}")
+                break
             if advanced < opt.param_groups[0]["max_iter"]:
                 res.stopped = f"L-BFGS converged (tolerance) after {done} iterations"
                 break
