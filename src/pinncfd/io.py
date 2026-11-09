@@ -70,6 +70,7 @@ def git_commit() -> str:
                 "--",
                 ".",
                 ":(exclude)validation/results",
+                ":(exclude)experiments/res01/results",
             ],
             cwd=ROOT,
             capture_output=True,
