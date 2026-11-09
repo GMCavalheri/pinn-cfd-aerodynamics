@@ -11,6 +11,7 @@ dependencies = [
     "scipy>=1.11",
     "matplotlib>=3.8",
     "aero",
+    "optuna>=4.0",
 ]
 
 # PyTorch comes from the PyTorch indexes: CPU wheels for CI and laptops without a GPU,
