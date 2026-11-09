@@ -21,7 +21,7 @@ from pathlib import Path
 
 import numpy as np
 
-from pinncfd.neuroevolution_search.genome import crossover, mutate, sample_genome
+from pinncfd.neuroevolution_search.genome import PHASE3_SPACE, GeneSpace
 from pinncfd.neuroevolution_search.nsga import (
     crowding_distance,
     fast_non_dominated_sort,
@@ -75,11 +75,13 @@ def run_evolution(
     mutation_rate: float = 0.2,
     initial: list[dict] | None = None,
     log: Callable[[str], None] = print,
+    space: GeneSpace = PHASE3_SPACE,
 ) -> dict:
     """Run (or resume) the search. Returns {"population", "evaluated", "history"}.
 
     ``initial`` genomes are placed in generation 0 ahead of random ones. ``evaluated`` keeps
-    every genome ever trained (with its generation), for the search-cost record.
+    every genome ever trained (with its generation), for the search-cost record. ``space`` is
+    the gene space (default: Phase 3's; frozen genes stay fixed through variation).
     """
     rng = np.random.default_rng(seed)
     if checkpoint.exists():
@@ -88,7 +90,7 @@ def run_evolution(
         log(f"resuming after generation {state['generation']}")
     else:
         genomes = list(initial or [])[:population_size]
-        genomes += [sample_genome(rng) for _ in range(population_size - len(genomes))]
+        genomes += [space.sample(rng) for _ in range(population_size - len(genomes))]
         evaluated = [{"genome": g, "fitness": fitness(g, seed), "generation": 0} for g in genomes]
         state = _snapshot(0, evaluated, evaluated, [], rng)
         _summarise(state, log)
@@ -101,7 +103,7 @@ def run_evolution(
         for _ in range(population_size):
             a = tournament(population, ranks, distances, rng)
             b = tournament(population, ranks, distances, rng)
-            child = mutate(crossover(a, b, rng), rng, rate=mutation_rate)
+            child = space.mutate(space.crossover(a, b, rng), rng, rate=mutation_rate)
             children.append(
                 {
                     "genome": child,

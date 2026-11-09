@@ -1,6 +1,8 @@
 """Phase 3: NSGA-II machinery and genome operators."""
 
+import json
 import math
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -108,3 +110,73 @@ def test_search_improves_a_known_objective_and_resumes(tmp_path):
         fitness, population_size=10, n_generations=6, seed=0, checkpoint=ck, log=lambda s: None
     )
     assert len(calls) == n + 20 and state["generation"] == 5
+
+
+# ---- gene spaces (RES-01) --------------------------------------------------------------------
+
+PHASE3_SEARCH = Path(__file__).resolve().parents[1] / "validation/results/phase3_search.json"
+
+
+def test_gene_space_replays_the_published_phase3_search(tmp_path):
+    # The Phase 3 search (seed 0, population 8, 5 generations) is replayed with each genome's
+    # recorded fitness looked up instead of trained: the default space must regenerate every
+    # one of the 40 published genomes, in order, from the same random-number stream.
+    saved = json.loads(PHASE3_SEARCH.read_text())["evaluated"]
+    lookup = {json.dumps(e["genome"], sort_keys=True): e["fitness"] for e in saved}
+
+    def fitness(g, seed):
+        return lookup[json.dumps(g, sort_keys=True)]
+
+    state = run_evolution(
+        fitness,
+        population_size=8,
+        n_generations=5,
+        seed=0,
+        checkpoint=tmp_path / "ck.json",
+        initial=[G.PHASE2_GENOME],
+        log=lambda s: None,
+    )
+    assert [e["genome"] for e in state["evaluated"]] == [e["genome"] for e in saved]
+    assert all(G.in_domain(e["genome"]) for e in saved)
+
+
+def test_frozen_genes_never_change():
+    rng = np.random.default_rng(3)
+    space = G.ablation_space(G.PHASE3_SPACE, G.PHASE2_GENOME, ["architecture"])
+    assert set(space.free) == {"depth", "width", "activation", "fourier_features", "fourier_scale"}
+    pop = [space.sample(rng) for _ in range(10)]
+    for _ in range(200):
+        a, b = pop[rng.integers(10)], pop[rng.integers(10)]
+        child = space.mutate(space.crossover(a, b, rng), rng, rate=0.5)
+        assert space.in_domain(child)
+        assert all(child[k] == G.PHASE2_GENOME[k] for k in space.fixed)
+        pop[rng.integers(10)] = child
+    # the free genes did move
+    assert len({g["width"] for g in pop}) > 1
+
+
+def test_ablation_arms_partition_the_genes():
+    hand = G.JOUKOWSKI_HAND_GENOME
+    space = G.JOUKOWSKI_SPACE
+    arch = G.ablation_space(space, hand, ["architecture"])
+    loss = G.ablation_space(space, hand, ["loss_and_sampling"])
+    both = G.ablation_space(space, hand, ["architecture", "loss_and_sampling", "optimiser"])
+    assert set(arch.free) & set(loss.free) == set()
+    assert set(both.free) == set(space.genes)
+    with pytest.raises(ValueError):
+        space.freeze({"width": 7})  # not one of the allowed widths
+    with pytest.raises(KeyError):
+        space.freeze({"w_data": 1.0})  # case 2 has no data term
+
+
+def test_joukowski_space_has_the_feature_gene_and_no_data_weight():
+    space = G.JOUKOWSKI_SPACE
+    assert "w_data" not in space.genes and space.choice["features"] == ["plain", "compress"]
+    assert space.in_domain(G.JOUKOWSKI_HAND_GENOME)
+    assert not G.PHASE3_SPACE.in_domain(G.JOUKOWSKI_HAND_GENOME)
+    g = space.sample(np.random.default_rng(0))
+    assert "features" in G.describe(g) and "data" not in G.describe(g)
+    # the Phase 3 description is unchanged (it labels the published front)
+    assert G.describe(G.PHASE2_GENOME) == (
+        "5×64 tanh, lr 1.0e-03, N 384, w body/tan/kutta/far/data 10/1/10/10/10"
+    )
