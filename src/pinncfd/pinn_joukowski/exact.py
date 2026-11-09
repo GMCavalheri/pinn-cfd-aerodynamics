@@ -54,10 +54,11 @@ class JoukowskiFlow:
         z = (zeta + self.b**2 / zeta - self.x_le) / self.chord
         return z.real, z.imag
 
-    def body_points(self, n: int, skip_te: float = 0.0):
+    def body_points(self, n: int, skip_te: float = 0.0, phase: float = 0.0):
         """(x, y, theta) of n points on the body, equispaced in the circle angle theta measured
-        from the trailing-edge point; ``skip_te`` drops |theta| < skip_te (the 0/0 at the cusp)."""
-        th = np.linspace(0, 2 * np.pi, n, endpoint=False)
+        from the trailing-edge point and shifted by ``phase`` spacings (0.5 interleaves a second
+        set between the first); ``skip_te`` drops |theta| < skip_te (the 0/0 at the cusp)."""
+        th = (np.arange(n) + phase) * 2 * np.pi / n
         th = th[np.minimum(th, 2 * np.pi - th) >= skip_te]
         te_angle = np.angle(self.b - self.zeta0)
         zeta = self.zeta0 + self.a * np.exp(1j * (te_angle + th))
