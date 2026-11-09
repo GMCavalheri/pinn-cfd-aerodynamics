@@ -110,6 +110,12 @@ class GeneSpace:
             drop(self.choice), drop(self.uniform), drop(self.log_uniform), drop(self.fixed)
         )
 
+    def with_log_uniform(self, name: str, lo: float, hi: float) -> GeneSpace:
+        """A copy with an extra log-uniform gene."""
+        return GeneSpace(
+            self.choice, self.uniform, {**self.log_uniform, name: (lo, hi)}, self.fixed
+        )
+
     def with_choice(self, name: str, options: list) -> GeneSpace:
         """A copy with an extra categorical gene, placed after the existing categorical ones."""
         return GeneSpace(
@@ -179,6 +185,10 @@ JOUKOWSKI_HAND_GENOME = {
     "features": "plain",
 }
 
+# RES-01 inverse problem: the case-2 genes plus the weight of the tap readings.
+AIRDATA_SPACE = JOUKOWSKI_SPACE.with_log_uniform("w_taps", 0.1, 100.0)
+AIRDATA_HAND_GENOME = {**JOUKOWSKI_HAND_GENOME, "w_taps": 10.0}
+
 # Gene groups for the RES-01 ablation. The pre-registration fixes which groups each arm evolves.
 GROUPS = {
     "architecture": (
@@ -189,7 +199,15 @@ GROUPS = {
         "fourier_scale",
         "features",
     ),
-    "loss_and_sampling": ("w_body", "w_tangency", "w_kutta", "w_far", "w_data", "n_interior"),
+    "loss_and_sampling": (
+        "w_body",
+        "w_tangency",
+        "w_kutta",
+        "w_far",
+        "w_data",
+        "w_taps",
+        "n_interior",
+    ),
     "optimiser": ("lr",),
 }
 
@@ -226,6 +244,7 @@ _WEIGHT_LABELS = {
     "w_kutta": "kutta",
     "w_far": "far",
     "w_data": "data",
+    "w_taps": "taps",
 }
 
 
