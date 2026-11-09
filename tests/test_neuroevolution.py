@@ -117,15 +117,24 @@ def test_search_improves_a_known_objective_and_resumes(tmp_path):
 PHASE3_SEARCH = Path(__file__).resolve().parents[1] / "validation/results/phase3_search.json"
 
 
+def _key(genome: dict) -> str:
+    # log-uniform genes go through exp(), whose last bit differs between platforms' maths
+    # libraries; 12 significant digits identify a genome on any of them
+    return json.dumps(
+        {k: float(f"{v:.12g}") if isinstance(v, float) else v for k, v in genome.items()},
+        sort_keys=True,
+    )
+
+
 def test_gene_space_replays_the_published_phase3_search(tmp_path):
     # The Phase 3 search (seed 0, population 8, 5 generations) is replayed with each genome's
     # recorded fitness looked up instead of trained: the default space must regenerate every
     # one of the 40 published genomes, in order, from the same random-number stream.
     saved = json.loads(PHASE3_SEARCH.read_text())["evaluated"]
-    lookup = {json.dumps(e["genome"], sort_keys=True): e["fitness"] for e in saved}
+    lookup = {_key(e["genome"]): e["fitness"] for e in saved}
 
     def fitness(g, seed):
-        return lookup[json.dumps(g, sort_keys=True)]
+        return lookup[_key(g)]
 
     state = run_evolution(
         fitness,
@@ -136,7 +145,12 @@ def test_gene_space_replays_the_published_phase3_search(tmp_path):
         initial=[G.PHASE2_GENOME],
         log=lambda s: None,
     )
-    assert [e["genome"] for e in state["evaluated"]] == [e["genome"] for e in saved]
+    replayed = [e["genome"] for e in state["evaluated"]]
+    assert len(replayed) == len(saved) == 40
+    for got, want in zip(replayed, (e["genome"] for e in saved), strict=True):
+        assert got.keys() == want.keys()
+        for k, v in want.items():
+            assert got[k] == (pytest.approx(v, rel=1e-12) if isinstance(v, float) else v)
     assert all(G.in_domain(e["genome"]) for e in saved)
 
 
