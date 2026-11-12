@@ -25,7 +25,7 @@ from pinncfd.pinn_joukowski import JoukowskiFlow
 from pilot_common import PHASE, g, history, setup, table, write_json
 
 U_TRUE = 1.15
-BUDGET = dict(adam_steps=3000, lbfgs_iters=500, eval_every=250, resample_every=250)
+BUDGET = dict(adam_steps=3000, lbfgs_iters=3000, eval_every=250, resample_every=250)
 BUDGET |= dict(plateau_window=1000)
 QUICK = dict(adam_steps=20, lbfgs_iters=5, eval_every=10, resample_every=10)
 PINN_RUNS = [("plain", 0.0), ("plain", 0.02), ("exact_map", 0.0), ("exact_map", 0.02)]
@@ -79,6 +79,7 @@ def main(argv=None) -> int:
                 f"{100 * level:g} %",
                 g(val["error"]),
                 g(val.get("u_err")),
+                g(out["scalars"].get("gamma")),
                 g(math.degrees(abs(a_or - math.radians(4.0)))),
                 g(abs(u_or - U_TRUE) / U_TRUE),
                 g(val.get("field_error")),
@@ -124,7 +125,9 @@ def main(argv=None) -> int:
         "",
         f"8 taps, true α = 4° and U = {U_TRUE}, started from 0° and U = 1. Budget "
         f"{budget['adam_steps']} Adam steps + {budget['lbfgs_iters']} L-BFGS iterations. "
-        "`exact_map` is the reference features (never offered to a search).",
+        "`exact_map` is the reference features (never offered to a search). Γ / U is the "
+        f"circulation per unit speed from the Kutta condition at α̂; exact at 4°: "
+        f"{flow.circulation(math.radians(4.0)):.3f}.",
         "",
         table(
             [
@@ -132,6 +135,7 @@ def main(argv=None) -> int:
                 "noise",
                 "α error [°]",
                 "U error",
+                "Γ / U",
                 "oracle α error [°]",
                 "oracle U error",
                 "field velocity error",

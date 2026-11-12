@@ -4,6 +4,10 @@ Runs the hand-tuned network (``JOUKOWSKI_HAND_GENOME``) on plain coordinates at 
 degrees, on compressed coordinates at 4 degrees, and on the exact circle-plane map (the
 "answer for free" reference, never offered to a search) at all three angles. One seed each.
 
+The network learns three basis flows and the circulation follows from the Kutta condition
+(``pinn_joukowski.model``). The circulation is a slow mode that settles only in the L-BFGS
+stage, hence the long second stage.
+
 Writes ``results/pilot_joukowski.md`` and ``.json`` and appends to
 ``results/compute_budget.csv``. ``--quick`` runs a tiny version into ``runs/``.
 """
@@ -14,10 +18,11 @@ import math
 
 from pinncfd import benchmark as B
 from pinncfd.neuroevolution_search import genome as G
+from pinncfd.pinn_joukowski import JoukowskiFlow
 
 from pilot_common import PHASE, g, history, setup, table, write_json
 
-BUDGET = dict(adam_steps=3000, lbfgs_iters=500, eval_every=250, resample_every=250)
+BUDGET = dict(adam_steps=3000, lbfgs_iters=3000, eval_every=250, resample_every=250)
 BUDGET |= dict(plateau_window=1000)
 QUICK = dict(adam_steps=20, lbfgs_iters=5, eval_every=10, resample_every=10)
 RUNS = [
@@ -36,6 +41,7 @@ def main(argv=None) -> int:
     budget = QUICK if args.quick else BUDGET
     small = dict(n_interior=128, n_eval=128, n_eval_body=100) if args.quick else {}
     runs = RUNS[:2] if args.quick else RUNS
+    flow = JoukowskiFlow()
     rows, record = [], []
     for features, a_deg in runs:
         genome = dict(G.JOUKOWSKI_HAND_GENOME, features=features)
@@ -44,6 +50,7 @@ def main(argv=None) -> int:
         name = f"joukowski_{features}_a{a_deg:g}"
         B.record(PHASE, name, out, device, budget_csv)
         val, test = out["val"], out["test"] or {}
+        gamma_exact = flow.circulation(math.radians(a_deg))
         print(f"{name}: val {val['error']:.4g}  test {test.get('error', math.inf):.4g}")
         rows.append(
             [
@@ -51,6 +58,8 @@ def main(argv=None) -> int:
                 f"{a_deg:g}°",
                 g(val["error"]),
                 g(test.get("error")),
+                g(out["scalars"].get("gamma")),
+                g(gamma_exact),
                 g(test.get("cp_rms_mid")),
                 g(test.get("cl_err_circulation")),
                 g(test.get("cl_err_pressure")),
@@ -62,6 +71,7 @@ def main(argv=None) -> int:
                 "name": name,
                 "features": features,
                 "alpha_deg": a_deg,
+                "gamma_exact": gamma_exact,
                 "val": val,
                 "test": test,
                 "scalars": out["scalars"],
@@ -74,6 +84,8 @@ def main(argv=None) -> int:
         "α",
         "val velocity error",
         "test velocity error",
+        "Γ",
+        "exact Γ",
         "test Cp RMS (5–95 % chord)",
         "test cl error (circulation)",
         "test cl error (pressure)",
@@ -84,7 +96,9 @@ def main(argv=None) -> int:
         "",
         "One seed (0) per row; budget "
         f"{budget['adam_steps']} Adam steps + {budget['lbfgs_iters']} L-BFGS iterations. "
-        "`exact_map` is the reference that hands the network the solution's own coordinates; "
+        "Γ is the circulation the Kutta condition gives the learned basis flows (unit chord and "
+        "speed). `exact_map` is the reference that hands the network the solution's own "
+        "coordinates; "
         "it is never offered to a search. A pilot, not a result: it calibrates the "
         "pre-registration.",
         "",
