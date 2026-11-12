@@ -128,12 +128,17 @@ def evaluate_test(case: str, model, problem) -> dict:
 
 
 def learned_scalars(model) -> dict:
-    """Scalars a model learns besides its network (Gamma, psi_b, alpha, U), as floats."""
+    """Scalars a model learns or derives besides its network (Gamma, psi_b, alpha, U), as
+    floats; a vector (psi_b of the Joukowski basis flows) gives one entry per component."""
     out = {}
     for name in ("gamma", "psi_b", "alpha_hat", "log_u"):
         p = getattr(model, name, None)
         if p is not None and hasattr(p, "detach"):
-            out[name] = float(p.detach())
+            values = p.detach().cpu().reshape(-1).tolist()
+            if len(values) == 1:
+                out[name] = float(values[0])
+            else:  # one per basis flow (the Joukowski case)
+                out |= {f"{name}_{i}": float(v) for i, v in enumerate(values)}
     if "log_u" in out:
         out["u_hat"] = math.exp(out.pop("log_u"))
     return out

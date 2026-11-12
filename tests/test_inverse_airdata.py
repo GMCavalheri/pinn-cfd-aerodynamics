@@ -10,7 +10,7 @@ from pinncfd import benchmark as B
 from pinncfd.inverse_airdata import AirDataPINN, AirDataProblem, oracle, taps
 from pinncfd.neuroevolution_search import genome as G
 from pinncfd.pinn_joukowski import JoukowskiFlow
-from pinncfd.pinn_joukowski.model import exact_stream_function
+from pinncfd.pinn_joukowski.model import exact_basis
 
 FLOW = JoukowskiFlow()
 ALPHA, U = np.radians(4.0), 1.15
@@ -59,25 +59,29 @@ def test_the_oracle_is_exact_without_noise(n, alpha):
 
 def test_the_exact_flow_fits_the_readings_and_scores_zero():
     class Exact(AirDataPINN):
+        """The exact basis flows, with the exact circulation (the Kutta circulation of the
+        basis flows carries the extrapolated condition's small bias, tested in case 2)."""
+
         shift = 0.0
 
         def perturbation(self, xy):
-            psi = exact_stream_function(xy, self.section, float(self.alpha_hat.detach()))
-            return psi - self.known_part(xy) - self.shift
+            return exact_basis(xy, self.section) - self.known_part(xy) - self.shift
+
+        def gamma_for(self, a):
+            return torch.as_tensor(FLOW.circulation(float(a.detach())), dtype=torch.float64)
 
     m = Exact(ALPHA, U, "plain").double()
     with torch.no_grad():  # set again in float64 (the parameters were created in float32)
         m.alpha_hat.fill_(ALPHA)
         m.log_u.fill_(math.log(U))
-        m.gamma.fill_(FLOW.circulation(ALPHA))
     p = AirDataProblem(m, ALPHA, U, n_taps=8, dtype=torch.float64, **SMALL)
-    m.shift = float(m.perturbation(p.xy_far).mean().detach())
+    m.shift = m.perturbation(p.xy_far).mean(dim=0).detach()
     with torch.no_grad():
-        m.psi_b.fill_(U * (FLOW.body_value(ALPHA) - m.shift))
+        m.psi_b.copy_(m.basis(p.xy_body).mean(dim=0))
     losses = {k: float(v.detach()) for k, v in p.losses(m).items()}
     # taps sit on the body, where the velocity comes through the map's derivative near its
     # stagnation region: float64 round-off of ~1e-8 in the velocity leaves ~1e-16 squared
-    assert losses["taps"] < 1e-14 and losses["body"] < 1e-9 and losses["kutta"] < 1e-5
+    assert losses["taps"] < 1e-14 and losses["body"] < 1e-9
     out = p.evaluate(m)
     assert out["error"] < 1e-12 and out["u_err"] < 1e-12 and out["field_error"] < 1e-12
 
@@ -86,7 +90,7 @@ def test_benchmark_builds_and_runs_the_airdata_case():
     budget = dict(adam_steps=30, lbfgs_iters=0, eval_every=10, resample_every=10)
     kwargs = dict(noise=0.02, n_interior=128, n_eval=128)
     out = B.run("airdata", G.AIRDATA_HAND_GENOME, budget, 0, torch.device("cpu"), kwargs)
-    assert {"alpha_hat", "u_hat", "gamma", "psi_b"} <= set(out["scalars"])
+    assert {"alpha_hat", "u_hat", "gamma", "psi_b_0"} <= set(out["scalars"])
     assert math.isfinite(out["val"]["error"]) and "u_err" in out["test"]
     first, last = out["result"].history[0], out["result"].history[-1]
     assert last["loss"] < first["loss"]  # the joint fit makes progress

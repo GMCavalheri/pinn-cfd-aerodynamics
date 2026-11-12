@@ -1,22 +1,23 @@
 """Loss terms, collocation and exact-solution metrics for the Joukowski PINN (RES-01 case 2).
 
 The loss terms are those of the airfoil family (``pinn_airfoil_flowfield.problem``), with the
-same meaning and default weights, for one section at one incidence and with no data term:
-case 2 is physics only.
+same meaning and default weights, for one section and with no data term: case 2 is physics
+only.
 
 * ``pde`` — Laplace residual of psi', scaled by min(1, (d / 0.1)^2) next to the surface;
 * ``body`` — psi - psi_b on the surface;
 * ``tangency`` — normal velocity on the surface;
-* ``kutta`` — the jump in downstream tangential velocity across the trailing edge,
-  *extrapolated to the edge*. Above and below the edge at x = 0.97 and 0.985 (as in the
-  family), the jump Delta(x) is measured and extrapolated linearly in s = sqrt(1 - x) to s = 0,
-  and that extrapolated jump is penalised. The family's condition, which penalises Delta at the
-  stations themselves, is biased on a *cusped* edge: a loaded cusp keeps a jump that shrinks
-  only like sqrt(1 - x), so the exact flow leaves that loss at 1.3e-2 at 4 degrees, while a flow
-  with 10 % *less* circulation scores 1.4e-3. The loss is minimised by too little lift. The
-  extrapolated jump is 3e-7 for the exact flow and 5e-2 for 90 % of its circulation
-  (``tests/test_joukowski_pinn.py`` checks both);
-* ``far`` — psi'^2 + (r d(psi')/dr)^2 on r = 8 chords about (0.5, 0).
+* ``far`` — psi'^2 + (r d(psi')/dr)^2 on r = 8 chords about (0.5, 0), plus the squared
+  *net flux* of psi' through the rings r = 0.75, 1.5 and 3 chords: the mean of r d(psi')/dr
+  on each. psi' is harmonic and bounded outside the section, so its flux through every
+  enclosing curve is zero (it would otherwise grow like ln r): each basis flow carries exactly
+  the circulation it is built with. Without the rings the network carried circulation in psi'
+  near the body and cancelled it in the sparsely sampled far field, a non-harmonic leak the
+  pointwise residual did not see.
+
+Every term is summed over the three basis flows of :mod:`pinncfd.pinn_joukowski.model`. There
+is no Kutta loss: the Kutta condition fixes Gamma in closed form from the basis flows
+(:meth:`JoukowskiPINN.update_kutta`, called before every evaluation).
 
 The reference is the exact flow (:class:`JoukowskiFlow`), so errors can be measured anywhere.
 There are two fixed, disjoint evaluation sets with their own seeds: ``"val"`` (what a search
@@ -34,19 +35,24 @@ from pinncfd.external.geometry import JoukowskiSection
 from pinncfd.pinn_airfoil_flowfield.model import R_FAR, X0
 from pinncfd.pinn_airfoil_flowfield.problem import (
     CIRCULATION_RADIUS,
-    KUTTA_STATIONS,
     RESIDUAL_SCALE,
-    SURFACE_OFFSET,
     cl_from_cp,
 )
 from pinncfd.pinn_joukowski.exact import JoukowskiFlow
-from pinncfd.pinn_joukowski.model import JoukowskiPINN
+from pinncfd.pinn_joukowski.model import (  # noqa: F401  (re-exported)
+    KUTTA_S,
+    KUTTA_STATIONS,
+    KUTTA_WEIGHTS,
+    JoukowskiPINN,
+    kutta_points,
+    trailing_edge_jump,
+)
 
 EVAL_MIN_DISTANCE = 0.005  # [chord]
 SPLIT_SEEDS = {"val": 1001, "test": 2002}
 SPLIT_PHASE = {"val": 0.0, "test": 0.5}
 TE_SKIP = 0.05  # [rad of circle angle] body points this close to the cusp are left out
-DEFAULT_WEIGHTS = {"pde": 1.0, "body": 10.0, "tangency": 1.0, "kutta": 10.0, "far": 10.0}
+DEFAULT_WEIGHTS = {"pde": 1.0, "body": 10.0, "tangency": 1.0, "far": 10.0}
 
 
 def distance_to_surface(section: JoukowskiSection, pts: np.ndarray, n: int = 400) -> np.ndarray:
@@ -75,32 +81,14 @@ def exterior_points(section: JoukowskiSection, n: int, rng: np.random.Generator)
     return np.vstack(out)[:n]
 
 
-KUTTA_S = np.sqrt(1 - np.array(KUTTA_STATIONS))
+FLUX_RADII = (0.75, 1.5, 3.0)  # [chord] about (X0, 0); all enclose the section
+FLUX_POINTS = 128
 
 
-def kutta_points(section: JoukowskiSection, h: float = 1e-5) -> np.ndarray:
-    """Upper then lower surface points at KUTTA_STATIONS, moved SURFACE_OFFSET outward, with
-    their downstream unit tangents, as rows (x, y, tx, ty)."""
-    xs = np.array(KUTTA_STATIONS)
-    xu, yu, xl, yl = section.surfaces(xs)
-    xu2, yu2, xl2, yl2 = section.surfaces(xs + h)
-    rows = []
-    for side, (x, y, x2, y2) in enumerate(((xu, yu, xu2, yu2), (xl, yl, xl2, yl2))):
-        tx, ty = x2 - x, y2 - y
-        norm = np.hypot(tx, ty)
-        tx, ty = tx / norm, ty / norm
-        sgn = 1.0 if side == 0 else -1.0
-        nx, ny = -sgn * ty, sgn * tx
-        rows.append(np.column_stack([x + SURFACE_OFFSET * nx, y + SURFACE_OFFSET * ny, tx, ty]))
-    return np.vstack(rows)
-
-
-def trailing_edge_jump(vt_upper, vt_lower):
-    """Jump of the downstream tangential velocity, extrapolated linearly in s = sqrt(1 - x)
-    from the two Kutta stations to the edge (s = 0). Works on arrays and tensors."""
-    d1, d2 = vt_upper[..., 0] - vt_lower[..., 0], vt_upper[..., 1] - vt_lower[..., 1]
-    s1, s2 = KUTTA_S
-    return (s2 * d1 - s1 * d2) / (s2 - s1)
+def flux_rings() -> np.ndarray:
+    """FLUX_POINTS equally spaced points on each of FLUX_RADII, ring by ring."""
+    th = 2 * np.pi * np.arange(FLUX_POINTS) / FLUX_POINTS
+    return np.vstack([np.column_stack([X0 + r * np.cos(th), r * np.sin(th)]) for r in FLUX_RADII])
 
 
 def eval_points(section: JoukowskiSection, n: int, seed: int) -> np.ndarray:
@@ -168,9 +156,7 @@ class JoukowskiProblem:
         self.weights = dict(DEFAULT_WEIGHTS)
         self.weights.update({k: v for k, v in (weights or {}).items() if k in DEFAULT_WEIGHTS})
         self.split = split
-        xk = kutta_points(self.section)
-        self.xy_kutta = self._t(xk[:, :2], True)
-        self.t_kutta = self._t(xk[:, 2:])
+        self.xy_rings = self._t(flux_rings(), True)
         self.refs = {s: self._reference(s, n_eval, n_eval_body) for s in SPLIT_SEEDS}
         self.resample(np.random.default_rng(seed))
 
@@ -199,7 +185,8 @@ class JoukowskiProblem:
 
     @property
     def n_collocation(self) -> int:
-        return self.n_interior + self.n_body + self.n_far + len(self.xy_kutta)
+        n = self.n_interior + self.n_body + self.n_far
+        return n + len(self.model.xy_kutta) + len(self.xy_rings)
 
     def _t(self, a, requires_grad=False):
         t = torch.as_tensor(np.asarray(a), dtype=self.dtype, device=self.device)
@@ -222,20 +209,30 @@ class JoukowskiProblem:
         self.xy_far = self._t(np.column_stack([X0 + R_FAR * np.cos(th), R_FAR * np.sin(th)]), True)
 
     def physics_losses(self, model) -> dict[str, torch.Tensor]:
-        psi = model.perturbation(self.xy_in)
-        out = {"pde": (self.w_in * laplacian(psi, self.xy_in).pow(2)).mean()}
-        out["body"] = (model(self.xy_body) - model.psi_b).pow(2).mean()
-        u, v = model.velocity(self.xy_body)
-        vn = u * self.n_body_normals[:, :1] + v * self.n_body_normals[:, 1:]
-        out["tangency"] = vn.pow(2).mean()
-        u, v = model.velocity(self.xy_kutta)
-        vt = (u * self.t_kutta[:, :1] + v * self.t_kutta[:, 1:]).view(2, len(KUTTA_STATIONS))
-        out["kutta"] = trailing_edge_jump(vt[0], vt[1]).pow(2)
+        """The loss terms, each summed over the three basis flows."""
+        pert = model.perturbation(self.xy_in)
+        pde = sum(
+            (self.w_in * laplacian(pert[:, k : k + 1], self.xy_in).pow(2)).mean() for k in range(3)
+        )
+        basis = model.basis(self.xy_body)
+        body = (basis - model.psi_b).pow(2).mean(dim=0).sum()
+        nx, ny = self.n_body_normals[:, :1], self.n_body_normals[:, 1:]
+        tangency = 0.0
+        for k in range(3):
+            g = grad(basis[:, k : k + 1], self.xy_body)
+            tangency = tangency + (g[:, 1:2] * nx - g[:, 0:1] * ny).pow(2).mean()
+        far = 0.0
         pf = model.perturbation(self.xy_far)
-        g = grad(pf, self.xy_far)
-        r_dr = (self.xy_far[:, :1] - X0) * g[:, :1] + self.xy_far[:, 1:2] * g[:, 1:2]
-        out["far"] = (pf.pow(2) + r_dr.pow(2)).mean()
-        return out
+        pr = model.perturbation(self.xy_rings)
+        xf, xr = self.xy_far, self.xy_rings
+        for k in range(3):
+            g = grad(pf[:, k : k + 1], xf)
+            r_dr = (xf[:, :1] - X0) * g[:, :1] + xf[:, 1:2] * g[:, 1:2]
+            far = far + (pf[:, k : k + 1].pow(2) + r_dr.pow(2)).mean()
+            g = grad(pr[:, k : k + 1], xr)
+            r_dr = (xr[:, :1] - X0) * g[:, :1] + xr[:, 1:2] * g[:, 1:2]
+            far = far + r_dr.view(len(FLUX_RADII), -1).mean(dim=1).pow(2).sum()
+        return {"pde": pde, "body": body, "tangency": tangency, "far": far}
 
     def losses(self, model) -> dict[str, torch.Tensor]:
         return self.physics_losses(model)
@@ -251,6 +248,7 @@ class JoukowskiProblem:
         return np.concatenate(us), np.concatenate(vs)
 
     def evaluate(self, model, split: str | None = None) -> dict[str, float]:
+        model.update_kutta()
         ref = self.refs[split or self.split]
         a = self.alpha
         u, v = self.predict(model, ref["field_xy"])

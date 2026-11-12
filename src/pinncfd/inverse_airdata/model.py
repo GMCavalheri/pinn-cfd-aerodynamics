@@ -1,10 +1,12 @@
 """The air-data PINN: the Joukowski network with the incidence and speed learnable.
 
-    psi = U [ y cos(alpha) - x sin(alpha) + Gamma / (2 pi) ln r_c + psi'(x, y) ],
+    psi = U [ cos(alpha) psi_x + sin(alpha) psi_y + Gamma(alpha) psi_c ],
 
-with alpha (``alpha_hat``), log U (``log_u``), Gamma and psi_b learnable scalars, trained
-together with psi' from the physics losses and the tap readings. U multiplies the whole stream
-function, so every physics loss is unchanged in form; only the readings see the speed.
+with the three basis flows of :mod:`pinncfd.pinn_joukowski.model`, alpha (``alpha_hat``) and
+log U (``log_u``) learnable, and Gamma(alpha) the Kutta circulation at the learned incidence
+(the basis flows' trailing-edge jumps are detached, the dependence on alpha is not). The basis
+flows do not depend on alpha or U, so the physics losses are unchanged; only the readings see
+the incidence and the speed.
 """
 
 from __future__ import annotations
@@ -43,11 +45,8 @@ class AirDataPINN(JoukowskiPINN):
     def u(self) -> torch.Tensor:
         return torch.exp(self.log_u)
 
-    def known_part(self, xy: torch.Tensor) -> torch.Tensor:
-        x, y = xy[:, :1], xy[:, 1:2]
-        log_r = 0.5 * torch.log((x - self.cx) ** 2 + (y - self.cy) ** 2)
-        a = self.alpha_hat
-        return y * torch.cos(a) - x * torch.sin(a) + self.gamma / (2 * math.pi) * log_r
+    def incidence(self) -> torch.Tensor:
+        return self.alpha_hat
 
-    def forward(self, xy: torch.Tensor) -> torch.Tensor:
-        return self.u * (self.known_part(xy) + self.perturbation(xy))
+    def speed(self) -> torch.Tensor:
+        return self.u

@@ -15,6 +15,7 @@ from pinncfd.pinn_joukowski.model import (
     FEATURES,
     JoukowskiPINN,
     circle_plane,
+    exact_basis,
     exact_stream_function,
 )
 from pinncfd.seed import seed_everything
@@ -26,26 +27,42 @@ SMALL = dict(n_interior=256, n_body=64, n_far=64, n_eval=256, n_eval_body=100)
 
 
 class ExactModel(JoukowskiPINN):
-    """psi' = exact psi - known part - c, with Gamma and psi_b set from the exact flow and the
-    constant c chosen so psi' has zero mean on the far circle (only psi' differences and
-    psi - psi_b enter the losses, so c is the one free constant)."""
+    """psi' = exact basis flow - known part - c for each of the three basis flows, with c chosen
+    so psi' has zero mean on the far circle (only psi' differences and psi - psi_b enter the
+    losses, so c is the one free constant of each), and psi_b the exact body values. With
+    ``exact_gamma`` the circulation is the exact one instead of the Kutta circulation of the
+    basis flows (which carries the small bias of the extrapolated Kutta condition)."""
 
     shift = 0.0
+    exact_gamma = False
 
     def perturbation(self, xy):
-        psi = exact_stream_function(xy, self.section, self.alpha)
-        return psi - self.known_part(xy) - self.shift
+        return exact_basis(xy, self.section) - self.known_part(xy) - self.shift
+
+    def gamma_for(self, a):
+        if self.exact_gamma:
+            a = float(torch.as_tensor(a).detach())
+            return torch.as_tensor(FLOW.circulation(a), dtype=torch.float64)
+        return super().gamma_for(a)
 
 
-def exact_setup(alpha=ALPHA):
+def exact_setup(alpha=ALPHA, exact_gamma=False):
     m = ExactModel(alpha, "plain").double()
-    with torch.no_grad():
-        m.gamma.fill_(FLOW.circulation(alpha))
+    m.exact_gamma = exact_gamma
     p = P.JoukowskiProblem(m, dtype=torch.float64, **SMALL)
-    m.shift = float(m.perturbation(p.xy_far).mean().detach())
+    m.shift = m.perturbation(p.xy_far).mean(dim=0).detach()
     with torch.no_grad():
-        m.psi_b.fill_(FLOW.body_value(alpha) - m.shift)
+        m.psi_b.copy_(m.basis(p.xy_body).mean(dim=0))
+    m.update_kutta()
     return m, p
+
+
+def test_the_exact_basis_flows_superpose_to_the_exact_flow():
+    xy = torch.tensor(P.exterior_points(FLOW.section, 200, np.random.default_rng(1)))
+    b = exact_basis(xy, FLOW.section)
+    psi = np.cos(ALPHA) * b[:, :1] + np.sin(ALPHA) * b[:, 1:2] + FLOW.circulation(ALPHA) * b[:, 2:]
+    diff = (psi - exact_stream_function(xy, FLOW.section, ALPHA)).numpy()
+    assert np.ptp(diff) < 1e-12  # equal up to a constant
 
 
 def test_torch_circle_plane_matches_the_numpy_map():
@@ -60,18 +77,28 @@ def test_the_exact_flow_zeroes_every_loss_term(alpha):
     m, p = exact_setup(alpha)
     losses = {k: float(v.detach()) for k, v in p.losses(m).items()}
     assert losses["pde"] < 1e-20  # exactly harmonic (float64 round-off)
-    assert losses["body"] < 1e-9  # the body is the streamline psi_b
+    assert losses["body"] < 1e-9  # the body is a streamline of every basis flow
     # surface samples lie on a 400-panel polygon, not the curve: their normals are off by up to
-    # half a panel angle, which leaves a small normal velocity
-    assert losses["tangency"] < 1e-4
-    # the extrapolated jump vanishes to O(s1 s2): measured 3e-7 at 4 degrees
-    assert losses["kutta"] < 1e-5
-    # the true disturbance at r = 8 chords is a doublet of order 1e-2 (squared ~1e-5)
-    assert losses["far"] < 1e-4
+    # half a panel angle, which leaves a small normal velocity. The vertical-freestream basis
+    # flow runs fast round the nose and the cusp, so its share dominates: measured 1.0e-3 of the
+    # total 1.2e-3 (largest normal velocity 0.15, at the cusp)
+    assert losses["tangency"] < 3e-3
+    # the true disturbance at r = 8 chords is a doublet of order 1e-2 (squared ~1e-5), in each
+    # of three basis flows
+    assert losses["far"] < 1e-3
+
+
+@pytest.mark.parametrize("alpha", np.radians([0.0, 4.0, 8.0]))
+def test_the_kutta_circulation_of_the_exact_basis_flows_is_the_exact_circulation(alpha):
+    # a straight line in s = sqrt(1 - x) over x = 0.85..0.985 leaves the curvature of the
+    # physical flow's jump at the edge: up to 4.5e-3 at 8 degrees, which over the jump's
+    # sensitivity to Gamma (about 2.7) is under 2e-3 in Gamma, i.e. under 0.3 %
+    m, _ = exact_setup(alpha)
+    assert float(m.gamma) == pytest.approx(FLOW.circulation(alpha), rel=3e-3, abs=2e-3)
 
 
 def test_the_metrics_of_the_exact_flow_are_zero():
-    m, p = exact_setup()
+    m, p = exact_setup(exact_gamma=True)
     for split in ("val", "test"):
         out = p.evaluate(m, split)
         assert out["error"] < 1e-12 and out["cp_max_abs"] < 1e-10
@@ -100,8 +127,30 @@ def test_the_extrapolated_kutta_condition_is_unbiased_and_the_plain_one_is_not()
     ext = {k: P.trailing_edge_jump(*vt(k)) ** 2 for k in (1.0, 0.9)}
     # the station jump itself rewards 10 % too little circulation ...
     assert raw[0.9] < raw[1.0]
-    # ... the jump extrapolated to the edge does not, by five orders of magnitude
+    # ... the jump extrapolated to the edge does not, by four orders of magnitude
     assert ext[1.0] < 1e-6 and ext[0.9] > 1e4 * ext[1.0]
+
+
+def test_the_exact_perturbations_have_no_net_flux_through_the_rings():
+    # psi' of each exact basis flow is harmonic and bounded outside the section, so its flux
+    # through every enclosing curve is zero (Gauss); the ring means are a 128-point trapezoidal
+    # rule of a smooth periodic function, accurate to round-off
+    m, p = exact_setup()
+
+    def ring_flux(psi):
+        xr = p.xy_rings
+        out = []
+        for k in range(3):
+            g = torch.autograd.grad(psi(xr)[:, k].sum(), xr)[0]
+            r_dr = (xr[:, :1] - 0.5) * g[:, :1] + xr[:, 1:2] * g[:, 1:2]
+            out.append(r_dr.view(len(P.FLUX_RADII), -1).mean(dim=1).detach().numpy())
+        return np.array(out)
+
+    assert np.abs(ring_flux(m.perturbation)).max() < 1e-10
+    # a psi' that carried the circulation itself (the whole circulation basis flow) would show
+    # a flux of 1 / (2 pi) on every ring: exactly what the flux term forbids
+    flux = ring_flux(lambda xy: exact_basis(xy, FLOW.section))
+    assert np.allclose(flux[2], 1 / (2 * np.pi), rtol=1e-8) and np.abs(flux[:2]).max() < 1e-10
 
 
 def test_validation_and_test_sets_are_disjoint():
@@ -123,7 +172,8 @@ def test_every_feature_type_builds_and_gives_all_loss_terms(features):
     losses = p.losses(m)
     assert set(losses) == set(P.DEFAULT_WEIGHTS)
     assert all(torch.isfinite(v) for v in losses.values())
-    assert p.n_collocation == 256 + 64 + 64 + 4
+    # interior, body, far, Kutta (8 stations x 2 sides), flux rings (3 x 128)
+    assert p.n_collocation == 256 + 64 + 64 + 16 + 3 * 128
 
 
 def test_a_short_run_trains():

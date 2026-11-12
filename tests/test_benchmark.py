@@ -52,7 +52,7 @@ def test_run_returns_validation_test_times_and_scalars(case, genome, kwargs):
     assert math.isfinite(out["val"]["error"]) and out["test"] is not None
     assert out["time_train_s"] > 0 and out["n_params"] > 0
     if case == "joukowski":
-        assert set(out["scalars"]) == {"gamma", "psi_b"}
+        assert set(out["scalars"]) == {"gamma", "psi_b_0", "psi_b_1", "psi_b_2"}
         # validation and test are different point sets, so their errors differ
         assert out["val"]["error"] != out["test"]["error"]
 

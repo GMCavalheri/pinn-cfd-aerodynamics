@@ -19,7 +19,8 @@ everywhere, with the same random-number stream as before the class existed, so t
 search reproduces. RES-01 adds two things on top:
 
 * ``JOUKOWSKI_SPACE`` for the single-section Joukowski case: no data weight (that case is
-  physics only) and an input-feature gene, ``features``;
+  physics only), no Kutta weight (its Kutta condition fixes the circulation in closed form,
+  not through a loss) and an input-feature gene, ``features``;
 * **frozen genes** (:meth:`GeneSpace.freeze`): held at a fixed value, never sampled, mutated or
   crossed. Freezing one group of genes at their hand-tuned values gives the ablations
   (architecture only, loss weighting and sampling only, or both); see :func:`ablation_space`.
@@ -175,12 +176,12 @@ PHASE2_GENOME = {
 # section gets its own counts, with the hand-tuned value 2048 in the middle.
 FEATURES = ["plain", "compress"]
 JOUKOWSKI_SPACE = (
-    PHASE3_SPACE.without("w_data")
+    PHASE3_SPACE.without("w_data", "w_kutta")
     .with_choice("n_interior", [1024, 2048, 4096])
     .with_choice("features", FEATURES)
 )
 JOUKOWSKI_HAND_GENOME = {
-    **{k: v for k, v in PHASE2_GENOME.items() if k != "w_data"},
+    **{k: v for k, v in PHASE2_GENOME.items() if k not in ("w_data", "w_kutta")},
     "n_interior": 2048,
     "features": "plain",
 }

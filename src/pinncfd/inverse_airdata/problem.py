@@ -60,12 +60,14 @@ class AirDataProblem(JoukowskiProblem):
 
     def losses(self, model) -> dict[str, torch.Tensor]:
         out = self.physics_losses(model)
+        model.update_kutta()
         u, v = model.velocity(self.xy_taps)
         dp = 0.5 * (model.u**2 - u**2 - v**2)
         out["taps"] = ((dp - self.dp_t) / self.dp_scale).pow(2).mean()
         return out
 
     def evaluate(self, model, split: str | None = None) -> dict[str, float]:
+        model.update_kutta()
         ref = self.refs[split or self.split]
         u, v = self.predict(model, ref["field_xy"])
         uv_ref = ref["field_uv"] * self.u_true
