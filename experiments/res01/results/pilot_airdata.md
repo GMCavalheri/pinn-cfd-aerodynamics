@@ -29,7 +29,7 @@ Least squares on the exact pressure model; 20 validation noise draws at each of 
 
 | features | noise | α error [°] | U error | Γ / U | oracle α error [°] | oracle U error | field velocity error | training time [s] |
 |---|---|---|---|---|---|---|---|---|
-| plain | 0 % | 1.37 | 2.71 | -0.00949 | 7.95e-16 | 0 | 2.67 | 960 |
-| plain | 2 % | 1.22 | 3.18 | -0.00735 | 0.0134 | 0.00486 | 3.13 | 949 |
-| exact_map | 0 % | 4.23 | 0.183 | 0.0922 | 7.95e-16 | 0 | 0.253 | 1.26e+03 |
-| exact_map | 2 % | 4.49 | 0.162 | 0.0997 | 0.0134 | 0.00486 | 0.235 | 1.21e+03 |
+| plain | 0 % | 30.6 | 1 | -0.00108 | 7.95e-16 | 0 | 1 | 1.06e+03 |
+| plain | 2 % | 30.1 | 1 | -0.00108 | 0.0134 | 0.00486 | 1 | 1.06e+03 |
+| exact_map | 0 % | 0.0734 | 0.00468 | 0.544 | 7.95e-16 | 0 | 0.009 | 1.78e+03 |
+| exact_map | 2 % | 0.0595 | 0.000398 | 0.544 | 0.0134 | 0.00486 | 0.00629 | 1.77e+03 |
