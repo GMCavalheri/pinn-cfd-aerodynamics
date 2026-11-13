@@ -49,18 +49,28 @@ the optimiser (learning rate). Which groups each arm evolves is fixed in the pre
 
 [`experiments/res01/results/pilot_hpo.md`](../experiments/res01/results/pilot_hpo.md):
 600 s per method, proxy budget 400 Adam steps and 100 L-BFGS iterations per candidate, every
-method starting from the hand-tuned genome (proxy validation error 0.588).
+method starting from the hand-tuned genome (proxy validation error 0.37). Rerun after case 2
+moved to superposed basis flows (no Kutta weight gene); each candidate now costs about four
+times as much as before, so far fewer fit in the budget.
 
 | Method | Candidates | Device time | Best validation error |
 |---|---|---|---|
-| NSGA-II | 24 (3 generations of 8) | 718 s | 0.133 |
-| TPE + ASHA | 65 (60 pruned) | 602 s | 0.103 |
-| Random | 21 | 606 s | 0.142 |
+| NSGA-II | 8 (1 generation) | 879 s | 0.208 |
+| TPE + ASHA | 14 (11 pruned) | 619 s | 0.186 |
+| Random | 6 | 626 s | 0.186 |
 
-All three found the same kind of network: compressed coordinates, Fourier features, SiLU. One
-search seed cannot rank them. Two things for the pre-registration:
+All three again chose compressed coordinates with Fourier features. TPE and random search
+found the same best genome: TPE starts with random draws from the same seed, and 14 candidates
+end inside that start-up phase. One search seed cannot rank the methods. For the
+pre-registration:
 
-- NSGA-II stops only at a generation boundary and overspent by 20 %. Either stop it inside a
-  generation or size the generations so the overshoot is small, and report it either way.
-- ASHA evaluated three times as many candidates as random search in the same time, which is
-  its point; whether that buys accuracy needs the seeds.
+- NSGA-II stops only at a generation boundary and overspent by 47 % (20 % before, with cheaper
+  candidates). Either stop it inside a generation or size the generations so the overshoot is
+  small, and report it either way.
+- The budget must fit enough candidates for TPE to leave its start-up phase, at least tens.
+- The hand-tuned genome scores 0.37 at the proxy budget but 0.81 at the full one (the
+  [case 2 pilot](pinn_joukowski.md#pilot-one-seed-hand-tuned-genome)): on these inputs, longer
+  training makes the network worse, so proxy errors can mislead. Retrain the winners at the full
+  budget before comparing them.
+- ASHA evaluated more candidates than random search in the same time, which is its point;
+  whether that buys accuracy needs the seeds.

@@ -67,12 +67,15 @@ One-seed pilots only, which calibrate the pre-registration and are not results:
 
 | Pilot | Result |
 |---|---|
-| Joukowski section, velocity error, hand-tuned genome | plain coordinates 0.78–0.81; exact-map reference 0.021–0.024 |
-| Same, best of a 600 s search | TPE + ASHA 0.103, NSGA-II 0.133, random 0.142 (proxy budget, one search seed) |
-| Air data, 8 taps, 2 % noise, incidence error | PINN (reference features) 0.32°; oracle 0.032° |
+| Joukowski section, velocity error, hand-tuned genome | exact-map reference 0.004–0.008 with the circulation within 2 %; plain coordinates 0.80–0.82 (fails) |
+| Same, best of a 600 s search | TPE + ASHA and random 0.186, NSGA-II 0.208 (proxy budget, one search seed) |
+| Air data, 8 taps, 2 % noise, incidence error | PINN (reference features) 4.5°, a regression; oracle 0.013° |
 
-Open issue: the learned circulation stays near zero and the case-2 lift is about 20 % low (see
-the [note](docs/pinn_joukowski.md#pilot-one-seed-hand-tuned-genome)).
+Case 2 superposes three learned basis flows and takes the circulation from the Kutta condition,
+as a panel method does (see the [note](docs/pinn_joukowski.md#why-superposition-four-failures-of-a-learned-circulation)).
+On plain coordinates the basis flows, singular at the cusp, are not learnable: a finding for
+the paper. The inverse problem's regression is described in its
+[note](docs/inverse_airdata.md#pilot-one-seed-8-taps-4).
 
 ## Quickstart
 

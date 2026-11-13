@@ -62,7 +62,8 @@ pinn-cfd-aerodynamics/
 - [x] Inverse air-data problem with a least-squares oracle
 - [x] Tuning baselines: random, TPE, ASHA, budgeted NSGA-II
 - [x] One-seed pilots (`experiments/res01/`)
-- [ ] Fix the learned circulation (Γ stays near zero; lift about 20 % low)
+- [x] Fix the learned circulation: superposed basis flows, Γ from the Kutta condition (exact-map features; plain coordinates still fail)
+- [ ] Inverse air data after the fix: the tap misfit bends the basis flows (incidence error 4.5°)
 - [ ] Pre-registration, then the final runs
 
 ## Validation Strategy
