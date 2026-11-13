@@ -79,11 +79,33 @@ def test_the_exact_flow_fits_the_readings_and_scores_zero():
     with torch.no_grad():
         m.psi_b.copy_(m.basis(p.xy_body).mean(dim=0))
     losses = {k: float(v.detach()) for k, v in p.losses(m).items()}
-    # taps sit on the body, where the velocity comes through the map's derivative near its
-    # stagnation region: float64 round-off of ~1e-8 in the velocity leaves ~1e-16 squared
-    assert losses["taps"] < 1e-14 and losses["body"] < 1e-9
+    assert set(losses) == {"pde", "body", "tangency", "far"}  # physics only
+    assert losses["body"] < 1e-9
+    # start the fit where the PINN starts (0 degrees, U = 1): on the exact basis flows and
+    # clean readings it is the oracle's problem, exact up to float64 round-off in the tap
+    # velocities (~1e-8 near the stagnation point, so ~1e-8 in the incidence)
+    with torch.no_grad():
+        m.alpha_hat.fill_(0.0)
+        m.log_u.fill_(0.0)
     out = p.evaluate(m)
-    assert out["error"] < 1e-12 and out["u_err"] < 1e-12 and out["field_error"] < 1e-12
+    assert out["error"] < 1e-6 and out["u_err"] < 1e-8 and out["taps_rms"] < 1e-10
+    assert out["field_error"] < 1e-8
+
+
+def test_the_readings_are_not_a_loss_and_no_optimiser_moves_the_air_data():
+    # the basis flows do not depend on alpha or U (superposition), so the readings must not
+    # train the network; alpha and U come from the least-squares fit, not from gradients
+    m = AirDataPINN(0.0, 1.0, "plain", mlp=dict(width=16, depth=2, seed=0))
+    p = AirDataProblem(m, ALPHA, U, n_taps=8, **SMALL)
+    assert "taps" not in p.losses(m)
+    trainable = {n for n, q in m.named_parameters() if q.requires_grad}
+    assert "alpha_hat" not in trainable and "log_u" not in trainable
+    # the basis velocities, combined with the coefficients, are the model's own velocity
+    m.update_kutta()
+    g = m.basis_velocity(p.xy_taps)
+    uv = torch.einsum("nkd,k->nd", g, m.coefficients().detach())
+    u, v = m.velocity(p.xy_taps)
+    assert torch.allclose(uv, torch.cat([u, v], dim=1).detach(), atol=1e-6)
 
 
 def test_benchmark_builds_and_runs_the_airdata_case():

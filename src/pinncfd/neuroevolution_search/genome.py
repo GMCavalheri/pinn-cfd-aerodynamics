@@ -186,9 +186,10 @@ JOUKOWSKI_HAND_GENOME = {
     "features": "plain",
 }
 
-# RES-01 inverse problem: the case-2 genes plus the weight of the tap readings.
-AIRDATA_SPACE = JOUKOWSKI_SPACE.with_log_uniform("w_taps", 0.1, 100.0)
-AIRDATA_HAND_GENOME = {**JOUKOWSKI_HAND_GENOME, "w_taps": 10.0}
+# RES-01 inverse problem: the case-2 genes. The readings fit the incidence and speed by least
+# squares, outside the loss (``inverse_airdata.problem``), so they have no weight gene.
+AIRDATA_SPACE = JOUKOWSKI_SPACE
+AIRDATA_HAND_GENOME = dict(JOUKOWSKI_HAND_GENOME)
 
 # Gene groups for the RES-01 ablation. The pre-registration fixes which groups each arm evolves.
 GROUPS = {
@@ -206,7 +207,6 @@ GROUPS = {
         "w_kutta",
         "w_far",
         "w_data",
-        "w_taps",
         "n_interior",
     ),
     "optimiser": ("lr",),
@@ -245,7 +245,6 @@ _WEIGHT_LABELS = {
     "w_kutta": "kutta",
     "w_far": "far",
     "w_data": "data",
-    "w_taps": "taps",
 }
 
 
