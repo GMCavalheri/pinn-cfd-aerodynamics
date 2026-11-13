@@ -63,7 +63,7 @@ pinn-cfd-aerodynamics/
 - [x] Tuning baselines: random, TPE, ASHA, budgeted NSGA-II
 - [x] One-seed pilots (`experiments/res01/`)
 - [x] Fix the learned circulation: superposed basis flows, Γ from the Kutta condition (exact-map features; plain coordinates still fail)
-- [ ] Inverse air data after the fix: the tap misfit bends the basis flows (incidence error 4.5°)
+- [x] Inverse air data after the fix: incidence and speed by least squares on the learned basis flows (0.06° with exact-map features; plain coordinates fail)
 - [ ] Pre-registration, then the final runs
 
 ## Validation Strategy

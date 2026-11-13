@@ -24,13 +24,13 @@ such.
   about zero): the basis flows are singular at the cusp. This is a finding for the paper,
   not a bug. All three tuning methods chose compressed coordinates with Fourier features
   (0.19–0.21 at the proxy budget).
-- **The inverse PINN regressed** to a 4.2–4.5° incidence error with the reference features
-  (0.16–0.32° before): the tap misfit bends the basis flows instead of moving the incidence.
-  See the [air-data note](../../docs/inverse_airdata.md#pilot-one-seed-8-taps-4). A fix is
-  proposed there and waits for a decision.
+- **The inverse PINN** fits the incidence and speed by least squares on the learned basis flows.
+  With the reference features its incidence error is 0.06–0.07° (the oracle's is 0.013° at 2 %
+  noise), and its speed error is under 0.5 %. On plain coordinates the fit collapses (U → 0).
+  See the [air-data note](../../docs/inverse_airdata.md#pilot-one-seed-8-taps-4).
 - NSGA-II overspends its budget by up to a generation (47 % here).
 
-Total training time of the current pilots: 4.6 GPU-hours on the RTX 2060 (2.8 for case 2, 1.2
+Total training time of the current pilots: 4.9 GPU-hours on the RTX 2060 (2.8 for case 2, 1.6
 for air data, 0.6 for the tuning pilot).
 
 Every run appends a row to [`results/compute_budget.csv`](results/compute_budget.csv) (phase
