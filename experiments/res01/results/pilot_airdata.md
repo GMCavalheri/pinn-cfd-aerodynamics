@@ -25,11 +25,11 @@ Least squares on the exact pressure model; 20 validation noise draws at each of 
 
 ## PINN (one seed, validation draw 0)
 
-8 taps, true α = 4° and U = 1.15, started from 0° and U = 1. Budget 3000 Adam steps + 500 L-BFGS iterations. `exact_map` is the reference features (never offered to a search).
+8 taps, true α = 4° and U = 1.15, started from 0° and U = 1. Budget 3000 Adam steps + 3000 L-BFGS iterations. `exact_map` is the reference features (never offered to a search). Γ / U is the circulation per unit speed from the Kutta condition at α̂; exact at 4°: 0.550.
 
-| features | noise | α error [°] | U error | oracle α error [°] | oracle U error | field velocity error | training time [s] |
-|---|---|---|---|---|---|---|---|
-| plain | 0 % | 1.23 | 0.138 | 7.95e-16 | 0 | 0.181 | 179 |
-| plain | 2 % | 2.41 | 0.153 | 0.0134 | 0.00486 | 0.195 | 174 |
-| exact_map | 0 % | 0.164 | 0.00127 | 7.95e-16 | 0 | 0.0196 | 334 |
-| exact_map | 2 % | 0.316 | 0.0113 | 0.0134 | 0.00486 | 0.0161 | 344 |
+| features | noise | α error [°] | U error | Γ / U | oracle α error [°] | oracle U error | field velocity error | training time [s] |
+|---|---|---|---|---|---|---|---|---|
+| plain | 0 % | 1.37 | 2.71 | -0.00949 | 7.95e-16 | 0 | 2.67 | 960 |
+| plain | 2 % | 1.22 | 3.18 | -0.00735 | 0.0134 | 0.00486 | 3.13 | 949 |
+| exact_map | 0 % | 4.23 | 0.183 | 0.0922 | 7.95e-16 | 0 | 0.253 | 1.26e+03 |
+| exact_map | 2 % | 4.49 | 0.162 | 0.0997 | 0.0134 | 0.00486 | 0.235 | 1.21e+03 |

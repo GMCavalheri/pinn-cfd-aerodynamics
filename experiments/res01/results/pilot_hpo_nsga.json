@@ -1,171 +1,163 @@
 {
- "generation": 2,
+ "generation": 0,
  "population": [
   {
    "genome": {
-    "depth": 4,
-    "width": 48,
-    "activation": "silu",
+    "depth": 5,
+    "width": 64,
+    "activation": "tanh",
+    "fourier_features": 0,
+    "n_interior": 2048,
+    "fourier_scale": 1.0,
+    "lr": 0.001,
+    "w_body": 10.0,
+    "w_tangency": 1.0,
+    "w_far": 10.0,
+    "features": "plain"
+   },
+   "fitness": {
+    "error": 0.3697780979051847,
+    "n_params": 17030
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 64,
+    "activation": "sin",
+    "fourier_features": 0,
+    "n_interior": 1024,
+    "features": "plain",
+    "fourier_scale": 0.2789233621749259,
+    "lr": 0.0019516030758660366,
+    "w_body": 54.73520283788638,
+    "w_tangency": 6.605524798050313,
+    "w_far": 15.434397571179078
+   },
+   "fitness": {
+    "error": 0.7291807121604441,
+    "n_params": 21190
+   },
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 5,
+    "width": 64,
+    "activation": "sin",
     "fourier_features": 32,
     "n_interior": 1024,
     "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0011185388821582285,
-    "w_body": 0.9238642740866008,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 1.0321282770792,
-    "w_far": 1.4957430776342595
+    "fourier_scale": 0.25479237529775917,
+    "lr": 0.0021603570341270748,
+    "w_body": 0.12611209081195618,
+    "w_tangency": 15.451346766855226,
+    "w_far": 0.33648589334198026
    },
    "fitness": {
-    "error": 0.13702312045152834,
-    "n_params": 10227
+    "error": 0.8319334754480551,
+    "n_params": 20998
    },
    "generation": 0
   },
   {
    "genome": {
     "depth": 3,
-    "width": 48,
-    "activation": "silu",
+    "width": 96,
+    "activation": "tanh",
     "fourier_features": 16,
     "n_interior": 1024,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 1.6577957054138936,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 29.384536217762122,
-    "w_far": 1.4957430776342595
+    "features": "plain",
+    "fourier_scale": 0.9897026370959023,
+    "lr": 0.00032021444989909794,
+    "w_body": 0.23596621672706308,
+    "w_tangency": 10.277162986057,
+    "w_far": 8.741149231878373
    },
    "fitness": {
-    "error": 0.16978377566684064,
-    "n_params": 6339
+    "error": 0.21967413142063102,
+    "n_params": 22086
    },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 6,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 16,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.001,
-    "w_body": 10.0,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 10.413096707578845,
-    "w_far": 5.408336157718351
-   },
-   "fitness": {
-    "error": 0.13255968000944812,
-    "n_params": 13395
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
-    "activation": "sin",
-    "fourier_features": 0,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 1.6577957054138936,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 13.771488786261708,
-    "w_far": 1.4957430776342595
-   },
-   "fitness": {
-    "error": 0.9018563403004557,
-    "n_params": 4899
-   },
-   "generation": 2
+   "generation": 0
   },
   {
    "genome": {
     "depth": 4,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 32,
-    "n_interior": 1024,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0007345860533627416,
-    "w_body": 0.254266716673433,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 3.7675842042088927,
-    "w_far": 0.8525613229431759
-   },
-   "fitness": {
-    "error": 0.13887590251119392,
-    "n_params": 10227
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
+    "width": 64,
     "activation": "silu",
     "fourier_features": 16,
     "n_interior": 2048,
     "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 8.741149231878373,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 10.413096707578845,
-    "w_far": 5.408336157718351
+    "fourier_scale": 1.9664618428584026,
+    "lr": 0.0014543309253774537,
+    "w_body": 8.94082982447902,
+    "w_tangency": 11.623587566145869,
+    "w_far": 1.4681291844203361
    },
    "fitness": {
-    "error": 0.18024768758753792,
-    "n_params": 6339
+    "error": 0.24780608356644346,
+    "n_params": 14790
    },
-   "generation": 2
+   "generation": 0
+  },
+  {
+   "genome": {
+    "depth": 6,
+    "width": 32,
+    "activation": "sin",
+    "fourier_features": 32,
+    "n_interior": 4096,
+    "features": "compress",
+    "fourier_scale": 0.7929232822281724,
+    "lr": 0.0009182408587307724,
+    "w_body": 46.60832579588589,
+    "w_tangency": 63.406027959670524,
+    "w_far": 1.1840923904208542
+   },
+   "fitness": {
+    "error": 0.20777667444864006,
+    "n_params": 7462
+   },
+   "generation": 0
   },
   {
    "genome": {
     "depth": 5,
     "width": 64,
     "activation": "tanh",
-    "fourier_features": 32,
-    "n_interior": 2048,
+    "fourier_features": 0,
+    "n_interior": 4096,
     "features": "compress",
-    "fourier_scale": 1.0,
-    "lr": 0.001,
-    "w_body": 0.9238642740866008,
-    "w_tangency": 13.343085556222643,
-    "w_kutta": 10.0,
-    "w_far": 10.0
+    "fourier_scale": 0.8413446446374833,
+    "lr": 0.0007391630609391138,
+    "w_body": 46.86224130787793,
+    "w_tangency": 0.4802559792604229,
+    "w_far": 7.405620178316892
    },
    "fitness": {
-    "error": 0.17554660254851825,
-    "n_params": 20867
+    "error": 0.2584623407891095,
+    "n_params": 17030
    },
-   "generation": 1
+   "generation": 0
   },
   {
    "genome": {
     "depth": 3,
-    "width": 48,
+    "width": 32,
     "activation": "sin",
-    "fourier_features": 16,
+    "fourier_features": 32,
     "n_interior": 2048,
-    "features": "plain",
-    "fourier_scale": 0.46749573387423693,
-    "lr": 0.0014052243587010253,
-    "w_body": 8.741149231878373,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 1.4159002641738991,
-    "w_far": 98.09114575979518
+    "features": "compress",
+    "fourier_scale": 0.6688965252376663,
+    "lr": 0.0022573842236367774,
+    "w_body": 0.1498663411089493,
+    "w_tangency": 1.0194153802344124,
+    "w_far": 0.28238290434184987
    },
    "fitness": {
-    "error": 0.22693231234750774,
-    "n_params": 6339
+    "error": 0.24616000441751865,
+    "n_params": 4294
    },
    "generation": 0
   }
@@ -182,13 +174,12 @@
     "lr": 0.001,
     "w_body": 10.0,
     "w_tangency": 1.0,
-    "w_kutta": 10.0,
     "w_far": 10.0,
     "features": "plain"
    },
    "fitness": {
-    "error": 0.5877266910824179,
-    "n_params": 16899
+    "error": 0.3697780979051847,
+    "n_params": 17030
    },
    "generation": 0
   },
@@ -204,514 +195,153 @@
     "lr": 0.0019516030758660366,
     "w_body": 54.73520283788638,
     "w_tangency": 6.605524798050313,
-    "w_kutta": 15.434397571179078,
-    "w_far": 4.274398161693902
+    "w_far": 15.434397571179078
    },
    "fitness": {
-    "error": 0.9500974708789577,
-    "n_params": 21059
+    "error": 0.7291807121604441,
+    "n_params": 21190
    },
    "generation": 0
   },
   {
    "genome": {
     "depth": 5,
-    "width": 96,
-    "activation": "tanh",
+    "width": 64,
+    "activation": "sin",
     "fourier_features": 32,
-    "n_interior": 4096,
-    "features": "plain",
-    "fourier_scale": 1.7504574840282463,
-    "lr": 0.00032412074615805126,
-    "w_body": 15.451346766855226,
-    "w_tangency": 0.33648589334198026,
-    "w_kutta": 38.86303977238022,
-    "w_far": 4.21098467352885
+    "n_interior": 1024,
+    "features": "compress",
+    "fourier_scale": 0.25479237529775917,
+    "lr": 0.0021603570341270748,
+    "w_body": 0.12611209081195618,
+    "w_tangency": 15.451346766855226,
+    "w_far": 0.33648589334198026
    },
    "fitness": {
-    "error": 0.245778523707661,
-    "n_params": 43587
+    "error": 0.8319334754480551,
+    "n_params": 20998
    },
    "generation": 0
   },
   {
    "genome": {
     "depth": 3,
-    "width": 48,
-    "activation": "sin",
-    "fourier_features": 16,
-    "n_interior": 2048,
-    "features": "plain",
-    "fourier_scale": 0.46749573387423693,
-    "lr": 0.0014052243587010253,
-    "w_body": 8.741149231878373,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 1.4159002641738991,
-    "w_far": 98.09114575979518
-   },
-   "fitness": {
-    "error": 0.22693231234750774,
-    "n_params": 6339
-   },
-   "generation": 0
-  },
-  {
-   "genome": {
-    "depth": 6,
     "width": 96,
-    "activation": "sin",
-    "fourier_features": 32,
-    "n_interior": 4096,
-    "features": "compress",
-    "fourier_scale": 1.4547817784991453,
-    "lr": 0.0007345860533627416,
-    "w_body": 0.254266716673433,
-    "w_tangency": 14.603771214247205,
-    "w_kutta": 3.7675842042088927,
-    "w_far": 0.8525613229431759
+    "activation": "tanh",
+    "fourier_features": 16,
+    "n_interior": 1024,
+    "features": "plain",
+    "fourier_scale": 0.9897026370959023,
+    "lr": 0.00032021444989909794,
+    "w_body": 0.23596621672706308,
+    "w_tangency": 10.277162986057,
+    "w_far": 8.741149231878373
    },
    "fitness": {
-    "error": 0.22954640203005358,
-    "n_params": 52899
+    "error": 0.21967413142063102,
+    "n_params": 22086
    },
    "generation": 0
   },
   {
    "genome": {
     "depth": 4,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 32,
-    "n_interior": 1024,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0011185388821582285,
-    "w_body": 0.9238642740866008,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 1.0321282770792,
-    "w_far": 1.4957430776342595
-   },
-   "fitness": {
-    "error": 0.13702312045152834,
-    "n_params": 10227
-   },
-   "generation": 0
-  },
-  {
-   "genome": {
-    "depth": 4,
-    "width": 96,
-    "activation": "tanh",
-    "fourier_features": 0,
-    "n_interior": 4096,
-    "features": "compress",
-    "fourier_scale": 0.3970268512691735,
-    "lr": 0.002040635334458963,
-    "w_body": 22.977084556509258,
-    "w_tangency": 0.5225265100290887,
-    "w_kutta": 42.60422723978783,
-    "w_far": 0.1498663411089493
-   },
-   "fitness": {
-    "error": 0.3383955322280038,
-    "n_params": 28323
-   },
-   "generation": 0
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 48,
-    "activation": "sin",
-    "fourier_features": 0,
-    "n_interior": 4096,
-    "features": "plain",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.0005102270317206009,
-    "w_body": 0.14323986505438355,
-    "w_tangency": 1.6355187202997739,
-    "w_kutta": 0.39403893221461067,
-    "w_far": 0.18717986807898487
-   },
-   "fitness": {
-    "error": 0.6984572760429658,
-    "n_params": 9603
-   },
-   "generation": 0
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 96,
-    "activation": "sin",
-    "fourier_features": 32,
-    "n_interior": 4096,
-    "features": "plain",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.0007345860533627416,
-    "w_body": 0.14323986505438355,
-    "w_tangency": 14.603771214247205,
-    "w_kutta": 3.7675842042088927,
-    "w_far": 15.383152705860645
-   },
-   "fitness": {
-    "error": 0.23576586637054298,
-    "n_params": 43587
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 32,
-    "n_interior": 4096,
-    "features": "compress",
-    "fourier_scale": 1.5086346024467956,
-    "lr": 0.0017181942332116695,
-    "w_body": 0.14323986505438355,
-    "w_tangency": 1.6355187202997739,
-    "w_kutta": 33.415798146329834,
-    "w_far": 1.0787726726300038
-   },
-   "fitness": {
-    "error": 0.223299029289106,
-    "n_params": 12579
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 16,
-    "n_interior": 1024,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 1.6577957054138936,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 29.384536217762122,
-    "w_far": 1.4957430776342595
-   },
-   "fitness": {
-    "error": 0.16978377566684064,
-    "n_params": 6339
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 48,
-    "activation": "tanh",
-    "fourier_features": 0,
-    "n_interior": 4096,
-    "features": "compress",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.002040635334458963,
-    "w_body": 0.14323986505438355,
-    "w_tangency": 1.6355187202997739,
-    "w_kutta": 43.681180207163585,
-    "w_far": 0.18717986807898487
-   },
-   "fitness": {
-    "error": 0.4697192745004605,
-    "n_params": 9603
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 6,
-    "width": 48,
+    "width": 64,
     "activation": "silu",
     "fourier_features": 16,
     "n_interior": 2048,
     "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.001,
-    "w_body": 10.0,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 10.413096707578845,
-    "w_far": 5.408336157718351
+    "fourier_scale": 1.9664618428584026,
+    "lr": 0.0014543309253774537,
+    "w_body": 8.94082982447902,
+    "w_tangency": 11.623587566145869,
+    "w_far": 1.4681291844203361
    },
    "fitness": {
-    "error": 0.13255968000944812,
-    "n_params": 13395
+    "error": 0.24780608356644346,
+    "n_params": 14790
    },
-   "generation": 1
+   "generation": 0
   },
   {
    "genome": {
     "depth": 6,
-    "width": 96,
+    "width": 32,
     "activation": "sin",
-    "fourier_features": 0,
+    "fourier_features": 32,
     "n_interior": 4096,
     "features": "compress",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.0014153201586561334,
-    "w_body": 0.254266716673433,
-    "w_tangency": 1.6355187202997739,
-    "w_kutta": 3.7675842042088927,
-    "w_far": 0.18717986807898487
+    "fourier_scale": 0.7929232822281724,
+    "lr": 0.0009182408587307724,
+    "w_body": 46.60832579588589,
+    "w_tangency": 63.406027959670524,
+    "w_far": 1.1840923904208542
    },
    "fitness": {
-    "error": 0.7433770953436802,
-    "n_params": 46947
+    "error": 0.20777667444864006,
+    "n_params": 7462
    },
-   "generation": 1
+   "generation": 0
   },
   {
    "genome": {
     "depth": 5,
     "width": 64,
     "activation": "tanh",
-    "fourier_features": 32,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 1.0,
-    "lr": 0.001,
-    "w_body": 0.9238642740866008,
-    "w_tangency": 13.343085556222643,
-    "w_kutta": 10.0,
-    "w_far": 10.0
-   },
-   "fitness": {
-    "error": 0.17554660254851825,
-    "n_params": 20867
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 4,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 32,
-    "n_interior": 1024,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0007345860533627416,
-    "w_body": 0.254266716673433,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 3.7675842042088927,
-    "w_far": 0.8525613229431759
-   },
-   "fitness": {
-    "error": 0.13887590251119392,
-    "n_params": 10227
-   },
-   "generation": 1
-  },
-  {
-   "genome": {
-    "depth": 6,
-    "width": 64,
-    "activation": "silu",
-    "fourier_features": 16,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 0.46749573387423693,
-    "lr": 0.001,
-    "w_body": 8.741149231878373,
-    "w_tangency": 1.496319715933348,
-    "w_kutta": 1.4159002641738991,
-    "w_far": 98.09114575979518
-   },
-   "fitness": {
-    "error": 0.5349824352204233,
-    "n_params": 22979
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
-    "activation": "sin",
-    "fourier_features": 0,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 1.6577957054138936,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 13.771488786261708,
-    "w_far": 1.4957430776342595
-   },
-   "fitness": {
-    "error": 0.9018563403004557,
-    "n_params": 4899
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 48,
-    "activation": "silu",
     "fourier_features": 0,
     "n_interior": 4096,
     "features": "compress",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.0003126170608352094,
-    "w_body": 0.14323986505438355,
-    "w_tangency": 84.44986026080038,
-    "w_kutta": 2.2712574506500918,
-    "w_far": 1.0787726726300038
+    "fourier_scale": 0.8413446446374833,
+    "lr": 0.0007391630609391138,
+    "w_body": 46.86224130787793,
+    "w_tangency": 0.4802559792604229,
+    "w_far": 7.405620178316892
    },
    "fitness": {
-    "error": 0.9439706538365569,
-    "n_params": 9603
+    "error": 0.2584623407891095,
+    "n_params": 17030
    },
-   "generation": 2
+   "generation": 0
   },
   {
    "genome": {
     "depth": 3,
-    "width": 48,
-    "activation": "sin",
-    "fourier_features": 16,
-    "n_interior": 1024,
-    "features": "plain",
-    "fourier_scale": 0.46749573387423693,
-    "lr": 0.0014052243587010253,
-    "w_body": 1.6577957054138936,
-    "w_tangency": 17.56599784932591,
-    "w_kutta": 1.89482331928984,
-    "w_far": 1.4957430776342595
-   },
-   "fitness": {
-    "error": 0.5349671671676791,
-    "n_params": 6339
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 5,
-    "width": 48,
-    "activation": "tanh",
-    "fourier_features": 16,
-    "n_interior": 4096,
-    "features": "compress",
-    "fourier_scale": 1.643567473002765,
-    "lr": 0.001,
-    "w_body": 10.0,
-    "w_tangency": 5.3900630699169465,
-    "w_kutta": 10.413096707578845,
-    "w_far": 5.408336157718351
-   },
-   "fitness": {
-    "error": 0.2252643318609215,
-    "n_params": 11043
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
-    "activation": "tanh",
-    "fourier_features": 32,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 1.0,
-    "lr": 0.001,
-    "w_body": 13.64148772755916,
-    "w_tangency": 6.06596766012174,
-    "w_kutta": 10.0,
-    "w_far": 10.0
-   },
-   "fitness": {
-    "error": 0.23292643678324296,
-    "n_params": 7875
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
-    "activation": "silu",
-    "fourier_features": 16,
-    "n_interior": 2048,
-    "features": "compress",
-    "fourier_scale": 0.8761415942408729,
-    "lr": 0.0014052243587010253,
-    "w_body": 8.741149231878373,
-    "w_tangency": 7.017062333532993,
-    "w_kutta": 10.413096707578845,
-    "w_far": 5.408336157718351
-   },
-   "fitness": {
-    "error": 0.18024768758753792,
-    "n_params": 6339
-   },
-   "generation": 2
-  },
-  {
-   "genome": {
-    "depth": 3,
-    "width": 48,
+    "width": 32,
     "activation": "sin",
     "fourier_features": 32,
     "n_interior": 2048,
-    "features": "plain",
-    "fourier_scale": 1.0,
-    "lr": 0.001,
-    "w_body": 2.812064257036549,
-    "w_tangency": 82.204153749604,
-    "w_kutta": 1.4159002641738991,
-    "w_far": 10.0
+    "features": "compress",
+    "fourier_scale": 0.6688965252376663,
+    "lr": 0.0022573842236367774,
+    "w_body": 0.1498663411089493,
+    "w_tangency": 1.0194153802344124,
+    "w_far": 0.28238290434184987
    },
    "fitness": {
-    "error": 0.19946933139227715,
-    "n_params": 7875
+    "error": 0.24616000441751865,
+    "n_params": 4294
    },
-   "generation": 2
+   "generation": 0
   }
  ],
  "history": [
   {
    "generation": 0,
-   "best_error": 0.13702312045152834,
-   "median_error": 0.29208702796783237,
-   "min_params": 6339,
-   "max_params": 52899,
+   "best_error": 0.20777667444864006,
+   "median_error": 0.2531342121777765,
+   "min_params": 4294,
+   "max_params": 22086,
    "front_size": 2,
    "evaluations": 8
-  },
-  {
-   "generation": 1,
-   "best_error": 0.13255968000944812,
-   "median_error": 0.17266518910767945,
-   "min_params": 6339,
-   "max_params": 20867,
-   "front_size": 3,
-   "evaluations": 16
-  },
-  {
-   "generation": 2,
-   "best_error": 0.13255968000944812,
-   "median_error": 0.17266518910767945,
-   "min_params": 4899,
-   "max_params": 20867,
-   "front_size": 4,
-   "evaluations": 24
   }
  ],
  "rng": {
   "bit_generator": "PCG64",
   "state": {
-   "state": 74326559287194164964819618043611720757,
+   "state": 255580044004121587518890641919877612235,
    "inc": 87136372517582989555478159403783844777
   },
   "has_uint32": 0,
-  "uinteger": 1526213111
+  "uinteger": 3380561489
  }
 }
